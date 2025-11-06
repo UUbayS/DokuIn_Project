@@ -1,17 +1,21 @@
-// Pastikan 3 import ini ada
 import { Routes, Route } from "react-router-dom";
-import Register from "./pages/Register"; // Pastikan path ini benar!
+import Register from "./pages/Register";
+import Login from "./pages/Login"; // 1. Import Halaman Login
+
+// Placeholder untuk halaman setelah login
+const Dashboard = () => <h1>Selamat Datang di Dashboard!</h1>;
 
 function App() {
   return (
-    // Jika Anda tidak melihat apa-apa, mungkin div ini tidak ada
     <div className="container">
       <Routes>
-        {/* Rute ini yang seharusnya me-render halaman Anda */}
         <Route path="/register" element={<Register />} />
-
-        {/* Tambahkan rute ini untuk testing */}
-        <Route path="/" element={<h1>Ini Halaman Home</h1>} />
+        {/* 2. Tambahkan rute untuk login */}
+        <Route path="/login" element={<Login />} />
+        {/* 3. Tambahkan rute untuk dashboard */}
+        <Route path="/dashboard" element={<Dashboard />} />
+        {/* Nanti kita atur halaman utama (/) */}
+        <Route path="/" element={<Login />} />
       </Routes>
     </div>
   );
