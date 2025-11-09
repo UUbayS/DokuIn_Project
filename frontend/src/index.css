@@ -86,3 +86,56 @@ h1 {
   color: white;
   text-align: center;
 }
+/* frontend/src/index.css */
+
+/* ... (semua style lama) ... */
+
+.divider {
+  border: 0;
+  height: 1px;
+  background: #eee;
+  margin: 2rem 0;
+}
+
+.dokumen-list-container h3 {
+  color: var(--dark-color);
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 0.5rem;
+}
+
+.dokumen-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.dokumen-table th,
+.dokumen-table td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.dokumen-table th {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.dokit-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.btn-download {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  text-decoration: none;
+  background-color: #6c757d;
+  color: white;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-download:hover {
+  background-color: #5a6268;
+}
