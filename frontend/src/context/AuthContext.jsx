@@ -10,6 +10,7 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token"));
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
   // '!!' mengubah string (jika ada) menjadi true, atau null/undefined menjadi false
 
   // Efek ini akan mengecek local storage saat aplikasi pertama kali dimuat
@@ -21,6 +22,7 @@ const AuthProvider = ({ children }) => {
       // Atur header default axios agar setiap request menyertakan token
       axios.defaults.headers.common["x-auth-token"] = storedToken;
     }
+    setIsAuthLoading(false);
   }, []);
 
   // Fungsi untuk LOGIN
@@ -36,9 +38,11 @@ const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
       // Atur header default axios
       axios.defaults.headers.common["x-auth-token"] = token;
+      setIsAuthLoading(false);
     } catch (err) {
       // Jika gagal, hapus sisa token lama (jika ada)
       logout();
+      setIsAuthLoading(false);
       // Lempar error agar komponen Login bisa menangkapnya
       throw new Error(err.response.data.msg || "Login Gagal");
     }
@@ -50,6 +54,7 @@ const AuthProvider = ({ children }) => {
     setToken(null);
     setIsAuthenticated(false);
     delete axios.defaults.headers.common["x-auth-token"];
+    setIsAuthLoading(false);
   };
 
   return (

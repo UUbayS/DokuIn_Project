@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const connectDB = require('./config/db');
+const path = require("path");
 
 const app = express();
 
@@ -18,6 +19,8 @@ app.get('/', (req, res) => res.send('API DokuIn Berjalan'));
 
 app.use('/api/auth', require('./routes/auth'));
 
+app.use("/api/dokumen", require("./routes/dokumen"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const PORT = process.env.PORT || 5000;
 
