@@ -269,7 +269,7 @@ const Register = () => {
               fontWeight: "600",
               cursor: "pointer"
             }}
-          >Sign up</button>
+          >Register</button>
         </div>
       </div>
 

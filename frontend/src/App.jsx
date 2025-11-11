@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Layout from "./pages/Layout";
 import UploadDokumen from "./pages/UploadDokumen";
+import RiwayatDokumen from "./pages/RiwayatDokumen";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -24,7 +25,7 @@ function App() {
       >
         <Route index element={<Dashboard />} />
           <Route path="upload-dokumen" element={<UploadDokumen />} />
-        {/* <Route path="riwayat-dokumen" element={<RiwayatDokumen />} /> */}
+        {<Route path="riwayat-dokumen" element={<RiwayatDokumen />} />}
       </Route>
     </Routes>
   );

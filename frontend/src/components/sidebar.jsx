@@ -37,10 +37,10 @@ const Sidebar = () => {
             </NavLink>
           </li>
           <li>
-            <a href="#" className="sidebar-nav-item">
+            <NavLink to="/riwayat-dokumen" className="sidebar-nav-item">
               <HiCollection size={20} />
               <span>Riwayat Dokumen</span>
-            </a>
+            </NavLink>
           </li>
         </ul>
       </nav>

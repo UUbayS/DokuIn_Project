@@ -123,7 +123,7 @@ const Login = () => {
             fontWeight: "bold",
             textAlign: "center",
             marginBottom: "24px"
-          }}>LOG IN</h2>
+          }}>Login</h2>
 
           {message && <div style={{ padding: "12px", backgroundColor: "#fee", color: "#c33", borderRadius: "8px", marginBottom: "16px", fontSize: "14px" }}>{message}</div>}
 
