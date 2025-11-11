@@ -13,6 +13,7 @@ exports.uploadDokumen = async (req, res) => {
     const newDokumen = new Dokumen({
       judul: judul,
       filePath: req.file.path.replace(/\\/g, "/"),
+      deskripsi: req.body.deskripsi,
       karyawanId: req.user.id, 
     });
 

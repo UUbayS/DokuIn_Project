@@ -27,6 +27,9 @@ const DokumenSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  deskripsi: {
+    type: String, // 'String deskripsi' [cite: 1027]
+  },
   // 'File konten' [cite: 1030] direpresentasikan oleh filePath
 });
 
