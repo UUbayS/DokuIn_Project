@@ -3,71 +3,157 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import UploadForm from "../components/UploadForm";
-import DokumenList from "../components/DokumenList";
+import StatsCard from "../components/statsCard";
+import "./Dashboard.css"
+
+import {
+  HiDocumentText,
+  HiCheckCircle,
+  HiXCircle,
+  HiClock,
+} from "react-icons/hi";
+
+const getStatusProps = (status) => {
+  switch (status) {
+    case "Disetujui":
+      return {
+        icon: <HiCheckCircle />,
+        color: "status-green",
+      };
+    case "Ditolak":
+      return {
+        icon: <HiXCircle />,
+        color: "status-red",
+      };
+    case "Pending":
+      return {
+        icon: <HiClock />,
+        color: "status-yellow",
+      };
+    default:
+      return {
+        icon: null,
+        color: "status-gray",
+      };
+  }
+};
 
 const Dashboard = () => {
-  const { logout, isAuthLoading } = useAuth(); // Ambil isAuthLoading
-  const navigate = useNavigate();
-
-  // --- PINDAHKAN STATE DARI DOKUMENLIST KE SINI ---
+  const { isAuthLoading, user } = useAuth();
   const [dokumenList, setDokumenList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // --- BUAT FUNGSI FETCH DI SINI ---
   const fetchDokumen = async () => {
     setIsLoading(true);
     try {
       const res = await axios.get("/api/dokumen/my-dokumen");
       setDokumenList(res.data);
-      setError(""); // Hapus error lama jika sukses
+      setError("");
     } catch (err) {
       setError("Gagal memuat dokumen");
+      console.error(err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // --- MODIFIKASI USEEFFECT ---
   useEffect(() => {
-    // Jalankan HANYA jika auth sudah selesai dicek
     if (!isAuthLoading) {
       fetchDokumen();
     }
-  }, [isAuthLoading]); // Bergantung pada status loading auth
+  }, [isAuthLoading]);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
+  const totalDokumen = dokumenList.length;
+  const totalDisetujui = dokumenList.filter(
+    (d) => d.status === "Disetujui"
+  ).length;
+  const totalPending = dokumenList.filter(
+    (d) => d.status === "Pending"
+  ).length;
+  const totalDitolak = dokumenList.filter(
+    (d) => d.status === "Ditolak"
+  ).length;
+
+  const dokumenTerbaru = dokumenList.slice(0, 3);
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <h2>DokuIn Dashboard</h2>
-        <button onClick={handleLogout} className="btn btn-danger">
-          Logout
-        </button>
-      </header>
+    <>
+      <h1 className="main-content-title">Selamat Datang, {user ? user.namaPengguna : "Username"}!</h1>
 
-      <main className="dashboard-content">
-        {/* Kirim fungsi 'fetchDokumen' sebagai prop.
-            Ini akan dipanggil oleh UploadForm saat sukses. */}
-        <UploadForm onUploadSuccess={fetchDokumen} />
-
-        <hr className="divider" />
-
-        {/* Kirim state sebagai prop ke DokumenList */}
-        <DokumenList
-          dokumenList={dokumenList}
-          isLoading={isLoading || isAuthLoading} // Loading jika data ATAU auth loading
-          error={error}
+      <div className="stats-grid">
+        <StatsCard
+          title="Total Dokumen:"
+          value={totalDokumen}
+          colorClass="card-white"
         />
-      </main>
-    </div>
+        <StatsCard
+          title="Disetujui"
+          value={totalDisetujui}
+          colorClass="card-green"
+        />
+        <StatsCard
+          title="Pending"
+          value={totalPending}
+          colorClass="card-yellow"
+        />
+        <StatsCard
+          title="Ditolak"
+          value={totalDitolak}
+          colorClass="card-red"
+        />
+      </div>
+
+      <div className="recent-docs-container">
+        <div className="recent-docs-header">
+          <span className="recent-docs-title">Dokumen Terbaru</span>
+          <span className="recent-docs-status-header">Status</span>
+        </div>
+        <div className="recent-docs-list">
+          {isLoading || isAuthLoading ? (
+            <div className="list-message">Memuat data...</div>
+          ) : error ? (
+            <div className="list-message error">{error}</div>
+          ) : dokumenTerbaru.length === 0 ? (
+            <div className="list-message">Belum ada dokumen.</div>
+          ) : (
+            <ul>
+              {dokumenTerbaru.map((doc) => {
+                const statusProps = getStatusProps(doc.status);
+                return (
+                  <li key={doc._id} className="recent-doc-item">
+                    <div className="doc-info">
+                      <HiDocumentText size={24} className="doc-info-icon" />
+                      <div>
+                        <div className="doc-info-name">
+                          {doc.judul || doc.namaFile || "Nama Dokumen"}
+                        </div>
+                        <div className="doc-info-date">
+                          {new Date(
+                            doc.tanggalUnggah
+                          ).toLocaleDateString("id-ID")}
+                        </div>
+                      </div>
+                    </div>
+                    <div className={`doc-status ${statusProps.color}`}>
+                      <span>{doc.status}</span>
+                      <span className="doc-status-icon">
+                        {statusProps.icon}
+                      </span>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+        <div className="recent-docs-footer">
+          <a href="/riwayat-dokumen">Tampilkan Semua &rarr;</a>
+        </div>
+      </div>
+    </>
   );
 };
 
 export default Dashboard;
+

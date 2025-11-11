@@ -17,24 +17,6 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    document.body.style.margin = "0";
-    document.body.style.padding = "0"; 
-    document.body.style.display = "block";
-    document.body.style.minHeight = "auto"; 
-    document.body.style.overflowX = "hidden"; 
-    document.body.style.backgroundColor = "#f5f5f5"; 
-
-    return () => {
-      document.body.style.margin = "";
-      document.body.style.padding = "";
-      document.body.style.display = "";
-      document.body.style.minHeight = "";
-      document.body.style.overflowX = "";
-      document.body.style.backgroundColor = "";
-    };
-  }, []); 
-
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -44,7 +26,7 @@ const Login = () => {
     setMessage("");
     try {
       await login(formData.namaPengguna, formData.kataSandi);
-      navigate("/dashboard");
+      navigate("/");
     } catch (err) {
       setMessage(err.message || "Login gagal. Periksa kembali data Anda.");
     }

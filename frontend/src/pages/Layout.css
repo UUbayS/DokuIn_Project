@@ -1,0 +1,19 @@
+/* == Struktur Layout BARU (Layout.jsx) == */
+.new-layout-container {
+  width: 100%;
+  position:relative;
+}
+
+.main-body-container {
+  display: flex;
+  height: calc(100vh - var(--header-height));
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  height: 100%;
+  box-sizing: border-box;
+  background-color: #f4f7f6;
+}

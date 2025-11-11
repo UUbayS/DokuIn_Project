@@ -1,0 +1,223 @@
+
+/* == CSS UNTUK HALAMAN UPLOAD DOKUMEN BARU == */
+
+/* Kontainer putih untuk form */
+.upload-container {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: var(--card-shadow);
+  border: 1px solid #e0e4e7;
+}
+
+/* Layout Grid 2 Kolom */
+.upload-form-layout {
+  display: grid;
+  grid-template-columns: 1fr; 
+  gap: 2rem 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .upload-form-layout {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Styling Form Inputs (Kolom Kiri) */
+.form-group-stacked {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group-stacked label {
+  font-weight: 600;
+  color: var(--dark-color);
+  font-size: 0.9rem;
+}
+
+.form-group-stacked input[type="text"],
+.form-group-stacked select,
+.form-group-stacked textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group-stacked input:focus,
+.form-group-stacked select:focus,
+.form-group-stacked textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(13, 71, 161, 0.2);
+}
+
+.form-group-stacked textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* Styling Area Drag & Drop (Kolom Kanan) */
+.upload-area-label {
+  font-weight: 600;
+  color: var(--dark-color);
+  margin-bottom: 0.5rem;
+  display: block;
+  font-size: 0.9rem;
+}
+
+.upload-drop-area {
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  padding: 2.5rem;
+  text-align: center;
+  cursor: pointer;
+  background-color: #f9fafb;
+  transition: background-color 0.2s, border-color 0.2s;
+  height: 100%;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.upload-drop-area:hover {
+  background-color: #f3f4f6;
+  border-color: var(--primary-color);
+}
+
+.upload-drop-area.dragging {
+  background-color: #f0f4f9;
+  border-color: var(--primary-color);
+  border-style: solid;
+}
+
+.upload-drop-icon {
+  color: #9ca3af;
+  margin-bottom: 1rem;
+}
+
+.upload-drop-text {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.upload-drop-text-filled {
+  color: var(--dark-color);
+  font-weight: 600;
+  word-break: break-all;
+}
+
+/* Tombol Aksi Form */
+.upload-form-actions {
+  grid-column: 1 / -1; 
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 1.5rem;
+  margin-top: 1rem;
+}
+
+/* == STYLING MODAL (Pop-up) == */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.modal-icon-confirm {
+  color: var(--dark-color); 
+  margin-bottom: 1rem;
+}
+.modal-icon-success {
+  color: var(--success-color); 
+  margin-bottom: 1rem;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--dark-color);
+  margin: 0.5rem 0;
+}
+
+.modal-text {
+  font-size: 1rem;
+  color: #4b5563;
+  margin-bottom: 2rem;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.modal-buttons-single {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.modal-buttons .btn,
+.modal-buttons-single .btn {
+  flex-grow: 1;
+}
+
+/* == STYLING TOMBOL BARU (dari Desain) == */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+.btn-primary:hover {
+  background-color: var(--primary-color-light);
+}
+
+.btn-secondary {
+  background-color: #ffffff;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+.btn-secondary:hover {
+  background-color: #f0f4f9;
+}
