@@ -1,0 +1,197 @@
+/* frontend/src/pages/DetailDokumen.css */
+
+.detail-page-container {
+  width: 100%;
+}
+
+/* Header Biru (Detail Dokumen & Komentar) */
+.detail-header,
+.comment-section-header {
+  background-color: #1e3a8a; /* Biru tua */
+  color: #ffffff;
+  padding: 16px 24px;
+  border-radius: 12px 12px 0 0;
+  margin-top: 24px;
+}
+
+.detail-header h2,
+.comment-section-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.detail-header {
+  margin-top: 0;
+}
+
+/* Kartu Konten (Info Dokumen & List Komentar) */
+.document-card,
+.comment-list-card {
+  background-color: #ffffff;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+}
+
+/* --- Penataan Info Dokumen --- */
+.document-content {
+  display: flex;
+  gap: 24px;
+}
+
+.doc-icon-placeholder {
+  color: #d1d5db;
+  background-color: #f9fafb;
+  border: 2px dashed #e5e7eb;
+  border-radius: 8px;
+  width: 160px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.doc-info-main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.doc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.doc-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.doc-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 4px 0;
+}
+
+.doc-status.status-disetujui { color: #166534; }
+.doc-status.status-ditolak { color: #991b1b; }
+.doc-status.status-pending { color: #92400e; }
+
+.doc-meta {
+  font-size: 14px;
+  color: #6b7280;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+}
+
+.doc-description h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+  margin-top: 0;
+}
+
+.doc-description p {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* --- Penataan Komentar --- */
+.comment-list-card {
+  padding: 16px;
+}
+
+.comment-item {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.comment-item:last-child {
+  border-bottom: none;
+}
+
+.comment-avatar {
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.comment-content {
+  flex-grow: 1;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.comment-user-info {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.comment-user-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.comment-user-role {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.comment-date {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.comment-body {
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.6;
+  margin-bottom: 12px;
+  margin-top: 0;
+}
+
+.comment-reply {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e3a8a;
+  text-decoration: none;
+}
+
+.comment-reply:hover {
+  text-decoration: underline;
+}
+
+.no-comments, .page-loading, .page-error {
+  padding: 40px;
+  text-align: center;
+  font-size: 16px;
+  color: #6b7280;
+}
+
+.page-error {
+  color: #991b1b;
+}

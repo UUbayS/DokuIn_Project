@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import "./RiwayatDokumen.css"; // Kita akan buat file CSS ini
+import { Link } from "react-router-dom"; // <-- 1. IMPORT Link
 
 import {
   HiDocumentText,
@@ -132,17 +133,15 @@ const RiwayatDokumen = () => {
                       </div>
                     </td>
 
-                    {/* Sel Aksi */}
+                    {/* 2. MODIFIKASI SEL AKSI */}
                     <td className="cell-aksi">
-                      <a
-                        href={`${BACKEND_URL}/${doc.filePath}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <Link
+                        to={`/dokumen/${doc._id}`} // Arahkan ke rute baru
                         className="action-button"
-                        title="Lihat Dokumen"
+                        title="Lihat Detail Dokumen"
                       >
                         <HiEye size={22} />
-                      </a>
+                      </Link>
                     </td>
                   </tr>
                 );
