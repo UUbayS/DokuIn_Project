@@ -25,7 +25,7 @@ const getStatusProps = (status) => {
         icon: <HiXCircle />,
         color: "status-red",
       };
-    case "Pending":
+    case "Menunggu Persetujuan":
       return {
         icon: <HiClock />,
         color: "status-yellow",

@@ -21,7 +21,7 @@ const getStatusProps = (status) => {
       return { icon: <HiCheckCircle size={24} />, colorClass: "status-disetujui" };
     case "Ditolak":
       return { icon: <HiXCircle size={24} />, colorClass: "status-ditolak" };
-    case "Pending":
+    case "Menunggu Persetujuan":
       return { icon: <HiMinusCircle size={24} />, colorClass: "status-pending" };
     default:
       return { icon: null, colorClass: "status-gray" };
