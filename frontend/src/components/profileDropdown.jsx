@@ -6,10 +6,10 @@ import "./profileDropdown.css";
 const ProfileDropdown = ({ onLogout }) => {
   return (
     <div className="dropdown-menu profile-dropdown">
-      <a href="#" className="dropdown-item">
+      {/* <a href="#" className="dropdown-item">
         <HiCog />
         <span>Pengaturan</span>
-      </a>
+      </a> */}
       <button onClick={onLogout} className="dropdown-item dropdown-item-logout">
         <HiLogout />
         <span>Log Out</span>
