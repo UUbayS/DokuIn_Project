@@ -1,0 +1,49 @@
+/* == STYLING DROPDOWN (ProfileDropdown.jsx) == */
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(var(--header-height) - 5px);
+  right: 1.5rem; 
+  z-index: 100; 
+  
+  background-color: var(--primary-color);;
+  min-width: 200px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); 
+  overflow: hidden; 
+  padding: 0.5rem 0;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; 
+  
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  color: #ffffff;
+  text-decoration: none;
+  
+  /* Reset untuk <button> */
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: var(--primary-color-light);
+}
+
+.dropdown-item-logout {
+  color: var(--danger-color); 
+}
+
+.dropdown-item-logout:hover {
+  background-color: #fdeeee; 
+  color: #b91c1c; 
+}

@@ -1,141 +1,30 @@
 /* frontend/src/index.css */
 
+/* == Reset & Variabel Global == */
 :root {
-  --primary-color: #007bff;
-  --danger-color: #dc3545;
+  --primary-color: #0d47a1; 
+  --primary-color-light: #1565c0;
+  --primary-color-link: #007bff;
+  --success-color: #008a4c;
+  --warning-color: #f0a000;
+  --danger-color: #ff243a;
   --light-color: #f8f9fa;
   --dark-color: #343a40;
+  --text-light: #ffffff;
+  --text-muted: #6c757d;
+  --sidebar-width: 260px;
+  --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  --header-height: 65px; 
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background-color: var(--light-color);
   margin: 0;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
-
-.container {
-  width: 100%;
-  max-width: 500px;
-}
-
-.form-container {
-  background: #fff;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
-  text-align: center;
+  font-family: Arial, sans-serif;
+  background-color: #f4f7f6; /* Latar belakang konten (abu-abu muda) */
   color: var(--dark-color);
 }
 
-.text-primary {
-  color: var(--primary-color);
-}
-
-.form-group {
-  margin-bottom: 1rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: #555;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 0.75rem;
-  box-sizing: border-box; /* Penting agar padding tidak merusak layout */
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.btn {
-  display: inline-block;
-  background: var(--primary-color);
-  color: #fff;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  text-align: center;
-  transition: background 0.3s ease;
-}
-
-.btn:hover {
-  background: #0056b3;
-}
-
-.btn-block {
-  width: 100%;
-}
-
-.alert-message {
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 4px;
-  background: var(--danger-color);
-  color: white;
-  text-align: center;
-}
-/* frontend/src/index.css */
-
-/* ... (semua style lama) ... */
-
-.divider {
-  border: 0;
-  height: 1px;
-  background: #eee;
-  margin: 2rem 0;
-}
-
-.dokumen-list-container h3 {
-  color: var(--dark-color);
-  border-bottom: 2px solid var(--primary-color);
-  padding-bottom: 0.5rem;
-}
-
-.dokumen-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-}
-
-.dokumen-table th,
-.dokumen-table td {
-  border: 1px solid #ddd;
-  padding: 0.75rem;
-  text-align: left;
-}
-
-.dokumen-table th {
-  background-color: #f4f4f4;
-  color: #333;
-}
-
-.dokit-table tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.btn-download {
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.8rem;
+a {
   text-decoration: none;
-  background-color: #6c757d;
-  color: white;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-.btn-download:hover {
-  background-color: #5a6268;
+  color: var(--primary-color-link);
 }

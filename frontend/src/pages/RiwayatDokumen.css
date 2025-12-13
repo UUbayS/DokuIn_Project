@@ -1,0 +1,158 @@
+/* frontend/src/pages/RiwayatDokumen.css */
+
+.riwayat-page-container {
+  width: 100%;
+}
+
+/* Judul Halaman */
+.main-content-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #111827;
+}
+
+/* Kontainer Tabel */
+.riwayat-table-container {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden; /* Penting untuk border-radius */
+}
+
+.riwayat-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Header Tabel */
+.riwayat-table thead tr {
+  background-color: #1e3a8a; /* Biru tua dari gambar */
+  color: #ffffff;
+}
+
+.riwayat-table th {
+  padding: 16px 24px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Body Tabel */
+.riwayat-table tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.riwayat-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.riwayat-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+/* 1. Atur posisi Ikon dan Teks Dokumen */
+.riwayat-table td {
+  padding: 16px 24px;
+  vertical-align: middle;
+  text-align: left;
+}
+
+/* Sel Nama Dokumen */
+.cell-nama-dokumen {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.cell-nama-dokumen .doc-icon {
+  color: #6b7280;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.cell-nama-dokumen .doc-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.cell-nama-dokumen .doc-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 2px;
+}
+
+.cell-nama-dokumen .doc-date {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Sel Status */
+.cell-status {
+  width: 180px; /* Beri lebar agar konsisten */
+  text-align: center;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 99px; /* Pill shape */
+  font-size: 13px;
+  font-weight: 600;
+  width: 120px; /* Lebar tetap untuk badge */
+  margin: 0 auto;
+}
+
+.status-badge.status-disetujui {
+  background-color: #dcfce7; /* Green light */
+  color: #166534; /* Green dark */
+}
+.status-badge.status-ditolak {
+  background-color: #fee2e2; /* Red light */
+  color: #991b1b; /* Red dark */
+}
+.status-badge.status-pending {
+  background-color: #fef3c7; /* Yellow light */
+  color: #92400e; /* Yellow dark */
+}
+.status-badge.status-gray {
+  background-color: #e5e7eb;
+  color: #4b5563;
+}
+
+/* Sel Aksi */
+.cell-aksi {
+  width: 80px;
+  text-align: center;
+}
+
+.action-button {
+  color: #4b5563;
+  transition: color 0.2s ease;
+}
+
+.action-button:hover {
+  color: #1e3a8a; /* Warna biru header */
+}
+
+/* State Pesan */
+.page-loading,
+.page-error,
+.empty-row {
+  padding: 40px;
+  text-align: center;
+  font-size: 16px;
+  color: #6b7280;
+}
+
+.page-error {
+  color: #991b1b;
+}

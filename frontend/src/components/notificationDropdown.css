@@ -1,0 +1,61 @@
+/* == STYLING DROPDOWN (NotificationDropdown.jsx) == */
+
+.notification-dropdown {
+  position: absolute;
+  top: calc(var(--header-height) - 5px);
+  z-index: 100;
+  
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  
+  min-width: 280px;
+  max-width: 350px;
+
+  right: 5rem; 
+}
+
+.dropdown-header {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: var(--primary-color); 
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.dropdown-content-empty {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.notification-list {
+  max-height: 300px; 
+  overflow-y: auto;
+}
+
+.notification-item {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+}
+.notification-item:last-child {
+  border-bottom: none;
+}
+.notification-item:hover {
+  background-color: #f4f4f4;
+}
+.notification-item-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--dark-color);
+}
+.notification-item-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}

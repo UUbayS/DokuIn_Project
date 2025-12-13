@@ -4,7 +4,8 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/authMiddleware"); // "Penjaga" kita
 const upload = require("../middleware/upload"); // Middleware Multer
-const { uploadDokumen, getMyDokumen } = require("../controllers/dokumenController");
+const { uploadDokumen, getMyDokumen, getDokumenById } = require("../controllers/dokumenController");
+
 
 /**
  * @route   POST api/dokumen/upload
@@ -21,5 +22,14 @@ router.post(
 );
 router.get("/my-dokumen", auth, getMyDokumen); // 'auth' memproteksi rute ini
 
+
+module.exports = router;
+
+/**
+ * @route   GET api/dokumen/:id
+ * @desc    Ambil detail satu dokumen berdasarkan ID (BARU)
+ * @access  Private (membutuhkan auth)
+ */
+router.get("/:id", auth, getDokumenById); // <-- RUTE BARU DITAMBAHKAN
 
 module.exports = router;

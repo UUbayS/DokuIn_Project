@@ -1,0 +1,23 @@
+/* == Style untuk StatsCard (StatsCard.jsx) == */
+
+.stats-card {
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  color: var(--dark-color);
+}
+.stats-card .card-title {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+.stats-card .card-value {
+  font-size: 2.25rem;
+  font-weight: 700;
+}
+
+.card-white { background-color: #fff; }
+.card-green { background-color: #d1fae5; color: #065f46; }
+.card-yellow { background-color: #fef3c7; color: #92400e; }
+.card-red { background-color: #fee2e2; color: #991b1b; }
+

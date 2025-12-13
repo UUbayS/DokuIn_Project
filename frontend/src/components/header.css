@@ -1,0 +1,40 @@
+/* == Header (Header.jsx) == */
+
+.header {
+  background-color: #ffffff;
+  box-shadow: var(--card-shadow);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  position: relative;
+  z-index: 10;
+  border-bottom: 1px solid #eee;
+  width: 100%;
+  height: var(--header-height);
+  box-sizing: border-box; 
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+}
+
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.header-icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #4b5563;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.header-icon-btn:hover {
+  color: var(--dark-color);
+}

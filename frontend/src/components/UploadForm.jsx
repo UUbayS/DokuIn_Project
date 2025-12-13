@@ -1,82 +1,256 @@
 // frontend/src/components/UploadForm.jsx
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { HiCheckCircle, HiQuestionMarkCircle, HiUpload } from 'react-icons/hi';
+import "./UploadForm.css"
 
-const UploadForm = ({ onUploadSuccess }) => {
+const UploadForm = () => {
+  const navigate = useNavigate();
+
+  // State untuk semua field formulir
+  const [namaDokumen, setNamaDokumen] = useState('');
+  const [jenisDokumen, setJenisDokumen] = useState('');
+  const [deskripsi, setDeskripsi] = useState('');
   const [file, setFile] = useState(null);
-  const [judul, setJudul] = useState(""); // Sesuai UI "Nama File" [cite: 684]
-  const [message, setMessage] = useState("");
+  
+  // State untuk mengontrol UI (modal, error, drag)
+  const [message, setMessage] = useState('');
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+
+  // --- Handlers untuk Modal & Navigasi ---
+
+  // Dipanggil saat tombol "Upload" utama diklik
+  const handleOpenConfirm = (e) => {
+    e.preventDefault();
+    // Validasi form sebelum membuka konfirmasi
+    if (!namaDokumen || !jenisDokumen || !file) {
+      setMessage('Nama Dokumen, Jenis Dokumen, dan File wajib diisi.');
+      return;
+    }
+    setMessage('');
+    setIsConfirmOpen(true); // Buka modal konfirmasi
+  };
+
+  // Untuk tombol "Cancel" pada form
+  const handleCancel = () => {
+    navigate(-1); // Kembali ke halaman sebelumnya
+  };
+
+  // Untuk tombol "Kembali" pada modal sukses
+  const handleSuccessModalClose = () => {
+    setIsSuccessOpen(false);
+    navigate('/riwayat-dokumen'); // Arahkan ke Riwayat Dokumen
+  };
+
+  // --- Handlers untuk File Drag-and-Drop ---
 
   const onFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+    }
   };
 
-  const onJudulChange = (e) => {
-    setJudul(e.target.value);
-  };
-
-  const onSubmit = async (e) => {
+  const handleDragOver = (e) => {
     e.preventDefault();
-    if (!file || !judul) {
-      setMessage("Judul dan file (PDF) harus diisi!");
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const droppedFile = e.dataTransfer.files[0];
+    if (droppedFile) {
+      setFile(droppedFile);
+    }
+  };
+
+  // --- Handler untuk Submit Akhir ---
+
+  // Dipanggil saat tombol "Submit" di modal konfirmasi diklik
+  const handleSubmit = async () => {
+    setIsConfirmOpen(false); // Tutup modal konfirmasi
+
+    if (!file) {
+      setMessage('File tidak ditemukan.');
       return;
     }
 
-    // PENTING: Kita harus menggunakan FormData
+    // Buat FormData untuk dikirim ke API
     const formData = new FormData();
-    formData.append("file", file); // 'file' harus cocok dgn di backend
-    formData.append("judul", judul); // 'judul' harus cocok dgn di backend
+    formData.append('file', file);
+    // API backend Anda sebelumnya mengharapkan 'judul'
+    formData.append('judul', namaDokumen); 
+    formData.append('jenisDokumen', jenisDokumen);
+    formData.append('deskripsi', deskripsi);
 
     try {
-      // Token (x-auth-token) sudah di-set secara global di AuthContext
-      const res = await axios.post("/api/dokumen/upload", formData, {
+      // Kirim data ke backend
+      await axios.post('/api/dokumen/upload', formData, {
         headers: {
-          // Axios akan otomatis set 'Content-Type': 'multipart/form-data'
-          // saat kita mengirim FormData
+          'Content-Type': 'multipart/form-data',
         },
       });
 
-      setMessage(res.data.msg || "Upload berhasil!");
+      // Jika berhasil, buka modal sukses
+      setIsSuccessOpen(true);
+      
+      // Reset form
+      setNamaDokumen('');
+      setJenisDokumen('');
+      setDeskripsi('');
       setFile(null);
-      setJudul("");
-      // Reset input file (agak tricky)
-      e.target.reset();
-      onUploadSuccess();
+      setMessage('');
+
     } catch (err) {
-      setMessage(err.response.data.msg || "Upload Gagal. Pastikan file adalah PDF.");
+      // Jika gagal, tampilkan pesan error
+      setMessage(err.response?.data?.msg || 'Upload Gagal. Terjadi kesalahan.');
     }
   };
 
   return (
-    <div className="upload-form-container">
-      <h3>Upload Dokumen Baru</h3>
+    // <React.Fragment> untuk membungkus form dan modal
+    <>
+      {/* Tampilkan pesan error jika ada */}
       {message && <div className="alert-message">{message}</div>}
-      <form onSubmit={onSubmit}>
-        <div className="form-group">
-          {/* Sesuai UI Design #5: Text Box Nama File [cite: 684] */}
-          <label htmlFor="judul">Judul Dokumen (Nama File)</label>
-          <input type="text" name="judul" value={judul} onChange={onJudulChange} required />
+
+      {/* Kontainer Putih untuk Formulir */}
+      <div className="upload-container">
+        <form onSubmit={handleOpenConfirm} className="upload-form-layout">
+          
+          {/* Kolom Kiri: Input Fields */}
+          <div className="upload-form-left">
+            <div className="form-group-stacked">
+              <label htmlFor="namaDokumen">Nama Dokumen</label>
+              <input
+                type="text"
+                id="namaDokumen"
+                value={namaDokumen}
+                onChange={(e) => setNamaDokumen(e.target.value)}
+                placeholder="Nama Dokumen"
+              />
+            </div>
+            
+            <div className="form-group-stacked">
+              <label htmlFor="jenisDokumen">Jenis Dokumen</label>
+              <select
+                id="jenisDokumen"
+                value={jenisDokumen}
+                onChange={(e) => setJenisDokumen(e.target.value)}
+              >
+                <option value="" disabled>Pilih Jenis Dokumen</option>
+                <option value="Pribadi">Pribadi</option>
+                <option value="Pekerjaan">Pekerjaan</option>
+                <option value="Akademik">Akademik</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+            </div>
+            
+            <div className="form-group-stacked">
+              <label htmlFor="deskripsi">Deskripsi</label>
+              <textarea
+                id="deskripsi"
+                rows="5"
+                value={deskripsi}
+                onChange={(e) => setDeskripsi(e.target.value)}
+                placeholder="Deskripsi"
+              ></textarea>
+            </div>
+          </div>
+
+          {/* Kolom Kanan: File Upload */}
+          <div className="upload-form-right">
+            <label htmlFor="file-upload" className="upload-area-label">
+              Upload Dokumen
+            </label>
+            <div
+              className={`upload-drop-area ${isDragging ? 'dragging' : ''}`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onClick={() => document.getElementById('file-upload').click()}
+            >
+              <input
+                type="file"
+                id="file-upload"
+                onChange={onFileChange}
+                accept="application/pdf" // Hanya PDF
+                hidden
+              />
+              <HiUpload size={48} className="upload-drop-icon" />
+              {file ? (
+                <span className="upload-drop-text-filled">{file.name}</span>
+              ) : (
+                <span className="upload-drop-text">
+                  Pilih atau Masukkan Dokumen
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Tombol Aksi Form */}
+          <div className="upload-form-actions">
+            <button type="button" className="btn btn-secondary" onClick={handleCancel}>
+              Cancel
+            </button>
+            <button type="submit" className="btn btn-primary">
+              Upload
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {/* ===== MODAL KONFIRMASI (Pop-Up 1) ===== */}
+      {isConfirmOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <HiQuestionMarkCircle size={80} className="modal-icon-confirm" />
+            <h2 className="modal-title">Konfirmasi</h2>
+            <p className="modal-text">Apakah yang Anda isi sudah benar?</p>
+            <div className="modal-buttons">
+              <button
+                className="btn btn-secondary"
+                onClick={() => setIsConfirmOpen(false)}
+              >
+                Cancel
+              </button>
+              <button className="btn btn-primary" onClick={handleSubmit}>
+                Submit
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="form-group">
-          {/* Sesuai UI Design #5: Menu Upload File [cite: 684] */}
-          <label htmlFor="file">Pilih File (PDF)</label>
-          <input
-            type="file"
-            name="file"
-            onChange={onFileChange}
-            required
-            accept="application/pdf" // Hanya izinkan PDF di browser
-          />
+      )}
+
+      {/* ===== MODAL SUKSES (Pop-Up 2) ===== */}
+      {isSuccessOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <HiCheckCircle size={80} className="modal-icon-success" />
+            <h2 className="modal-title">Dokumen berhasil disimpan!</h2>
+            <div className="modal-buttons-single">
+              <button className="btn btn-primary" onClick={handleSuccessModalClose}>
+                Kembali
+              </button>
+            </div>
+          </div>
         </div>
-        <input
-          type="submit"
-          value="Upload" // Sesuai UI Design #5 [cite: 684]
-          className="btn btn-primary btn-block"
-        />
-      </form>
-    </div>
+      )}
+    </>
   );
 };
 
 export default UploadForm;
+
+
+
+
