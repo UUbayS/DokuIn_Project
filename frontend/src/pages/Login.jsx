@@ -129,13 +129,13 @@ const Login = () => {
 
           {/* Form Fields */}
           <div style={{ marginBottom: "20px" }}>
-            <label style={{ display: "block", marginBottom: "8px", fontSize: "14px", fontWeight: "600" }}>Username/Email</label>
+            <label style={{ display: "block", marginBottom: "8px", fontSize: "14px", fontWeight: "600" }}>Username</label>
             <input
               type="text"
               name="namaPengguna"
               value={formData.namaPengguna}
               onChange={onChange}
-              placeholder="example@gmail.com"
+              placeholder="Username"
               style={{
                 width: "100%",
                 padding: "14px 16px",

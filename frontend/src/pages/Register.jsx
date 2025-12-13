@@ -25,17 +25,34 @@ const Register = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (formData.kataSandi !== formData.kataSandi2) {
-      setMessage("Password dan Re-Confirm Password tidak cocok");
+    const minPasswordLength = 8; // Define minimum password length here
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email regex
+
+    // Check if email format is valid
+    if (!emailRegex.test(formData.email)) {
+      setMessage("Masukkan email yang valid.");
       return;
     }
+
+    // Check if passwords match
+    if (formData.kataSandi !== formData.kataSandi2) {
+      setMessage("Confirm password tidak cocok.");
+      return;
+    }
+
+    // Check for minimum password length
+    if (formData.kataSandi.length < minPasswordLength) {
+      setMessage(`Password harus minimal ${minPasswordLength} karakter.`);
+      return;
+    }
+
     try {
       const newUser = {
         namaPengguna: formData.namaPengguna,
         email: formData.email,
         kataSandi: formData.kataSandi,
       };
-      await axios.post("/api/auth/register", newUser); 
+      await axios.post("/api/auth/register", newUser);
       setShowPopup(true);
     } catch (err) {
       setMessage(err.response?.data?.msg || "Registrasi gagal. Coba lagi.");
@@ -185,6 +202,7 @@ const Register = () => {
                 value={formData.kataSandi}
                 onChange={onChange}
                 placeholder="Password"
+                minLength={8}
                 style={{
                   width: "100%",
                   padding: "14px 16px",
@@ -225,6 +243,7 @@ const Register = () => {
                 value={formData.kataSandi2}
                 onChange={onChange}
                 placeholder="Password"
+                minLength={8}
                 style={{
                   width: "100%",
                   padding: "14px 16px",

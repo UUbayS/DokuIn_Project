@@ -69,7 +69,7 @@ const Dashboard = () => {
     (d) => d.status === "Disetujui"
   ).length;
   const totalPending = dokumenList.filter(
-    (d) => d.status === "Pending"
+    (d) => d.status === "Menunggu Persetujuan"
   ).length;
   const totalDitolak = dokumenList.filter(
     (d) => d.status === "Ditolak"
@@ -93,7 +93,7 @@ const Dashboard = () => {
           colorClass="card-green"
         />
         <StatsCard
-          title="Pending"
+          title="Menunggu Persetujuan"
           value={totalPending}
           colorClass="card-yellow"
         />
