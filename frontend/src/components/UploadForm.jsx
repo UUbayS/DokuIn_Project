@@ -43,7 +43,7 @@ const UploadForm = () => {
   // Untuk tombol "Kembali" pada modal sukses
   const handleSuccessModalClose = () => {
     setIsSuccessOpen(false);
-    navigate('/riwayat-dokumen'); // Arahkan ke Riwayat Dokumen
+    navigate('/dashboard'); // Arahkan ke Riwayat Dokumen
   };
 
   // --- Handlers untuk File Drag-and-Drop ---
@@ -88,7 +88,6 @@ const UploadForm = () => {
     // Buat FormData untuk dikirim ke API
     const formData = new FormData();
     formData.append('file', file);
-    // API backend Anda sebelumnya mengharapkan 'judul'
     formData.append('judul', namaDokumen); 
     formData.append('jenisDokumen', jenisDokumen);
     formData.append('deskripsi', deskripsi);
