@@ -34,10 +34,10 @@ const Header = ({ onToggleProfile, onToggleNotify }) => {
       </div>
       </div>
       <div className="header-icons">
-        <button onClick={onToggleNotify} className="header-icon-btn">
+        <button onClick={(e) => onToggleNotify(e)} className="header-icon-btn">
           <HiBell size={22} />
         </button>
-        <button onClick={onToggleProfile} className="header-icon-btn">
+        <button onClick={(e) => onToggleProfile(e)} className="header-icon-btn">
           <HiUserCircle size={22} />
         </button>
       </div>

@@ -2,15 +2,15 @@
 
 import React, { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import "./Layout.css"
+import { useAuth } from "../../context/AuthContext";
+import "./AdminLayout.css"
 
-import Sidebar from "../components/sidebar";
-import Header from "../components/header"; 
-import ProfileDropdown from "../components/profileDropdown";
-import NotificationDropdown from "../components/notificationDropdown";
+import Sidebar from "../../components/sidebar";
+import Header from "../../components/header"; 
+import ProfileDropdown from "../../components/profileDropdown";
+import NotificationDropdown from "../../components/notificationDropdown";
 
-const Layout = () => {
+const AdminLayout = () => {
 
   const { logout } = useAuth();
   const navigate = useNavigate();
@@ -22,15 +22,12 @@ const Layout = () => {
     navigate("/login");
   };
 
-  const toggleProfile = (e) => {
-    if (e) e.stopPropagation(); 
-    
+  const toggleProfile = () => {
     setIsProfileOpen(!isProfileOpen);
     setIsNotifyOpen(false);
   };
 
-  const toggleNotify = (e) => {
-    if (e) e.stopPropagation();
+  const toggleNotify = () => {
     setIsNotifyOpen(!isNotifyOpen);
     setIsProfileOpen(false);
   };
@@ -42,17 +39,8 @@ const Layout = () => {
         onToggleNotify={toggleNotify} 
       />
       
-      {isProfileOpen && (
-        <ProfileDropdown 
-          onLogout={handleLogout} 
-          onClose={() => setIsProfileOpen(false)} // <--- INI KUNCINYA
-        />
-      )}
-      
-      {isNotifyOpen && (
-        <NotificationDropdown 
-        onClose={() => setIsNotifyOpen(false)}/>
-      )}
+      {isProfileOpen && <ProfileDropdown onLogout={handleLogout} />}
+      {isNotifyOpen && <NotificationDropdown />}
 
       <div className="main-body-container">
         <Sidebar />
@@ -64,4 +52,4 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default AdminLayout;

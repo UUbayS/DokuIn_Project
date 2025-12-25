@@ -4,7 +4,7 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/authMiddleware"); // "Penjaga" kita
 const upload = require("../middleware/upload"); // Middleware Multer
-const { uploadDokumen, getMyDokumen, getDokumenById } = require("../controllers/dokumenController");
+const { uploadDokumen, getMyDokumen, getDokumenById, downloadDokumen } = require("../controllers/dokumenController");
 
 
 /**
@@ -31,5 +31,7 @@ module.exports = router;
  * @access  Private (membutuhkan auth)
  */
 router.get("/:id", auth, getDokumenById); // <-- RUTE BARU DITAMBAHKAN
+
+router.get("/download/:id", auth, downloadDokumen);
 
 module.exports = router;
