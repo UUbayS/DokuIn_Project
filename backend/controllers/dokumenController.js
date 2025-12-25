@@ -100,3 +100,60 @@ exports.downloadDokumen = async (req, res) => {
     res.status(500).send('Server Error saat download');
   }
 };
+
+// ==================== ADMIN FUNCTIONS ====================
+
+/**
+ * @route   GET api/dokumen/admin/all
+ * @desc    Ambil semua dokumen dari semua karyawan (Admin Only)
+ * @access  Private (Admin)
+ */
+exports.getAllDokumen = async (req, res) => {
+  try {
+    // Ambil semua dokumen dan populate info karyawan
+    const dokumen = await Dokumen.find()
+      .populate('karyawanId', 'namaPengguna email')
+      .sort({ tanggalUnggah: -1 });
+
+    res.json(dokumen);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+/**
+ * @route   PUT api/dokumen/admin/status/:id
+ * @desc    Update status dokumen (Disetujui/Ditolak) - Admin Only
+ * @access  Private (Admin)
+ */
+exports.updateStatusDokumen = async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    // Validasi status
+    const validStatuses = ['Disetujui', 'Ditolak', 'Menunggu Persetujuan'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ msg: 'Status tidak valid. Gunakan: Disetujui, Ditolak, atau Menunggu Persetujuan' });
+    }
+
+    // Cari dan update dokumen
+    const dokumen = await Dokumen.findByIdAndUpdate(
+      req.params.id,
+      { status: status },
+      { new: true } // Return dokumen yang sudah diupdate
+    ).populate('karyawanId', 'namaPengguna email');
+
+    if (!dokumen) {
+      return res.status(404).json({ msg: 'Dokumen tidak ditemukan' });
+    }
+
+    res.json({ msg: `Status dokumen berhasil diubah menjadi "${status}"`, dokumen });
+  } catch (err) {
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Dokumen tidak ditemukan' });
+    }
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
