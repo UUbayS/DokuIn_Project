@@ -68,3 +68,35 @@ exports.getDokumenById = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
+
+const path = require('path');
+const fs = require('fs'); 
+
+/**
+ * @route   GET api/dokumen/download/:id
+ * @desc    Download file berdasarkan ID dokumen
+ * @access  Private/Public (Sesuaikan kebutuhan)
+ */
+exports.downloadDokumen = async (req, res) => {
+  try {
+    const dokumen = await Dokumen.findById(req.params.id);
+
+    if (!dokumen) {
+      return res.status(404).json({ msg: 'Dokumen tidak ditemukan di database' });
+    }
+
+    const fullPath = path.join(__dirname, '..', dokumen.filePath); 
+
+    // Cek apakah file fisik benar-benar ada
+    if (!fs.existsSync(fullPath)) {
+      return res.status(404).json({ msg: 'File fisik tidak ditemukan di server' });
+    }
+
+    // Perintahkan browser untuk download
+    res.download(fullPath, dokumen.judul + path.extname(dokumen.filePath)); // Rename file sesuai judul saat didownload
+
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error saat download');
+  }
+};

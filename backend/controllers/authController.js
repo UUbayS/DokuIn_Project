@@ -75,7 +75,14 @@ exports.loginUser = async (req, res) => {
       },
       (err, token) => {
         if (err) throw err;
-        res.json({ token }); // Kirim token ke frontend
+        res.json({ 
+          token, 
+          user: {
+                id: user.id,
+                namaPengguna: user.namaPengguna, 
+                email: user.email,
+                role: user.role } 
+            }); // Kirim token  & user ke frontend
       }
     );
   } catch (err) {

@@ -135,12 +135,22 @@
 }
 
 .action-button {
-  color: #4b5563;
-  transition: color 0.2s ease;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  transition: all 0.2s ease;
 }
 
 .action-button:hover {
-  color: #1e3a8a; /* Warna biru header */
+  background-color: #eff6ff;
+  color: #1e3a8a;
+  transform: translateY(-1px);
 }
 
 /* State Pesan */
@@ -156,3 +166,4 @@
 .page-error {
   color: #991b1b;
 }
+

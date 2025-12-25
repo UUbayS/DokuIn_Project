@@ -3,15 +3,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-import "./RiwayatDokumen.css"; // Kita akan buat file CSS ini
-import { Link } from "react-router-dom"; // <-- 1. IMPORT Link
+import "./RiwayatDokumen.css"; 
+import { Link } from "react-router-dom"; 
 
 import {
   HiDocumentText,
   HiCheckCircle,
   HiXCircle,
-  HiMinusCircle, // Menggunakan ini untuk 'Pending' agar sesuai gambar
+  HiMinusCircle,
   HiEye,
+  HiDownload,
 } from "react-icons/hi";
 
 // URL Backend (sama seperti di DokumenList.jsx)
@@ -72,6 +73,54 @@ const RiwayatDokumen = () => {
       fetchDokumen();
     }
   }, [isAuthLoading]); // <-- Dependency-nya adalah isAuthLoading
+
+// Import axios di bagian atas file jika belum
+  // import axios from "axios";
+
+  const handleDownload = (doc) => {
+    // Kita panggil endpoint download yang baru dibuat
+    // Token akan otomatis terkirim jika browser menyimpan cookie, 
+    // tapi karena window.open metode GET biasa, kita pakai cara direct link.
+    
+    // Jika rute backend menggunakan middleware 'auth', 
+    // maka window.open mungkin ditolak jika tidak mengirim token.
+    
+    // CARA 1 (Jika Endpoint Download TIDAK butuh Auth/Public):
+    // const downloadUrl = `${BACKEND_URL}/api/dokumen/download/${doc._id}`;
+    // window.open(downloadUrl, "_blank");
+
+    // CARA 2 (Jika Endpoint Download BUTUH Auth - Paling Aman):
+    // Kita gunakan fetch/axios untuk download blob agar bisa kirim Header Token
+    
+    axios({
+      url: `${BACKEND_URL}/api/dokumen/download/${doc._id}`,
+      method: 'GET',
+      responseType: 'blob', // Penting agar jadi file
+      headers: {
+        "x-auth-token": localStorage.getItem("token")
+      }
+    })
+    .then((response) => {
+      // Buat link download virtual di browser
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      
+      // Nama file default atau dari judul dokumen
+      link.setAttribute('download', `${doc.judul || 'dokumen'}.pdf`); 
+      
+      document.body.appendChild(link);
+      link.click();
+      
+      // Bersihkan
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    })
+    .catch((error) => {
+      console.error("Download error:", error);
+      alert("Gagal mendownload file. Kemungkinan file fisik hilang atau token expired.");
+    });
+  }
 
   // Tampilkan pesan loading
   if (isLoading || isAuthLoading) {
@@ -142,6 +191,14 @@ const RiwayatDokumen = () => {
                       >
                         <HiEye size={22} />
                       </Link>
+                      <button
+                          type="button"
+                          onClick={() => handleDownload(doc)}
+                          className="action-button btn-download"
+                          title="Download"
+                        >
+                          <HiDownload size={20} />
+                      </button>
                     </td>
                   </tr>
                 );

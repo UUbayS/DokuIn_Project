@@ -8,6 +8,7 @@ const AuthContext = createContext();
 
 // 2. Buat Provider (Komponen yang akan membungkus App)
 const AuthProvider = ({ children }) => {
+  const [user, setUser] =  useState(null);
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token"));
   const [isAuthLoading, setIsAuthLoading] = useState(true);
@@ -16,12 +17,19 @@ const AuthProvider = ({ children }) => {
   // Efek ini akan mengecek local storage saat aplikasi pertama kali dimuat
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
+
     if (storedToken) {
       setToken(storedToken);
       setIsAuthenticated(true);
       // Atur header default axios agar setiap request menyertakan token
       axios.defaults.headers.common["x-auth-token"] = storedToken;
     }
+
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+
     setIsAuthLoading(false);
   }, []);
 
@@ -29,12 +37,15 @@ const AuthProvider = ({ children }) => {
   const login = async (namaPengguna, kataSandi) => {
     try {
       const res = await axios.post("/api/auth/login", { namaPengguna, kataSandi });
-      const { token } = res.data;
+      const { token,  user } = res.data;
 
       // Simpan token ke local storage
       localStorage.setItem("token", token);
+      // Simpan user
+      localStorage.setItem("user", JSON.stringify(user));
       // Simpan ke state
       setToken(token);
+      setUser(user);
       setIsAuthenticated(true);
       // Atur header default axios
       axios.defaults.headers.common["x-auth-token"] = token;
@@ -51,7 +62,9 @@ const AuthProvider = ({ children }) => {
   // Fungsi untuk LOGOUT (Use Case #3)
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setToken(null);
+    setUser(null);
     setIsAuthenticated(false);
     delete axios.defaults.headers.common["x-auth-token"];
     setIsAuthLoading(false);
@@ -62,6 +75,7 @@ const AuthProvider = ({ children }) => {
       value={{
         token,
         isAuthenticated,
+        user,
         login,
         logout,
       }}
