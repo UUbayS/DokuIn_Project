@@ -1,0 +1,226 @@
+/* frontend/src/pages/admin/KelolaDokumen.css */
+
+/* Stats Row */
+.admin-stats-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.admin-stat-item {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100px;
+  border-left: 4px solid var(--primary-color);
+}
+
+.admin-stat-item.pending {
+  border-left-color: var(--warning-color);
+}
+
+.admin-stat-item.approved {
+  border-left-color: var(--success-color);
+}
+
+.admin-stat-item.rejected {
+  border-left-color: var(--danger-color);
+}
+
+.stat-number {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--dark-color);
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+/* Table Container */
+.dokumen-table-container {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.dokumen-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dokumen-table thead {
+  background: var(--primary-color);
+  color: white;
+}
+
+.dokumen-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.dokumen-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.dokumen-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.dokumen-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Document Cell */
+.doc-cell {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.doc-cell-icon {
+  color: var(--primary-color);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.doc-title {
+  font-weight: 600;
+  color: var(--dark-color);
+}
+
+.doc-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+/* Karyawan Cell */
+.karyawan-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+}
+
+/* Status Badge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.status-badge.status-green {
+  background-color: #e6f7f0;
+  color: var(--success-color);
+}
+
+.status-badge.status-red {
+  background-color: #fdeeee;
+  color: var(--danger-color);
+}
+
+.status-badge.status-yellow {
+  background-color: #fef8e7;
+  color: var(--warning-color);
+}
+
+.status-badge.status-gray {
+  background-color: #f0f0f0;
+  color: #666;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn-action:hover:not(:disabled) {
+  transform: scale(1.1);
+}
+
+.btn-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-action.approve {
+  background-color: #e6f7f0;
+  color: var(--success-color);
+}
+
+.btn-action.approve:hover:not(:disabled) {
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+}
+
+.btn-action.reject {
+  background-color: #fdeeee;
+  color: var(--danger-color);
+}
+
+.btn-action.reject:hover:not(:disabled) {
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.btn-action.download {
+  background-color: #e0f2fe;
+  color: var(--primary-color);
+}
+
+.btn-action.download:hover:not(:disabled) {
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+/* Messages */
+.dokumen-table-container .list-message {
+  padding: 3rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.dokumen-table-container .list-message.error {
+  color: var(--danger-color);
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dokumen-table {
+    display: block;
+    overflow-x: auto;
+  }
+  
+  .admin-stats-row {
+    justify-content: center;
+  }
+}

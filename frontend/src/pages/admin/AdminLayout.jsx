@@ -5,7 +5,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import "./AdminLayout.css"
 
-import Sidebar from "../../components/sidebar";
+import AdminSidebar from "../../components/AdminSidebar";
 import Header from "../../components/header"; 
 import ProfileDropdown from "../../components/profileDropdown";
 import NotificationDropdown from "../../components/notificationDropdown";
@@ -43,7 +43,7 @@ const AdminLayout = () => {
       {isNotifyOpen && <NotificationDropdown />}
 
       <div className="main-body-container">
-        <Sidebar />
+        <AdminSidebar />
         <main className="main-content">
           <Outlet />
         </main>

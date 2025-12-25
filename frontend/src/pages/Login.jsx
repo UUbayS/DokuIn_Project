@@ -1,7 +1,7 @@
 // Login.jsx
 
 import React, { useState, useEffect } from "react"; 
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Eye, EyeOff } from "lucide-react";
 import DokuInIcon from "../assets/DokuIn_Icon.svg";
@@ -26,7 +26,14 @@ const Login = () => {
     setMessage("");
     try {
       await login(formData.namaPengguna, formData.kataSandi);
-      navigate("/");
+      
+      // Cek role dari localStorage (sudah disimpan oleh login function)
+      const userData = JSON.parse(localStorage.getItem("user"));
+      if (userData && userData.role === "Administrator") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       setMessage(err.message || "Login gagal. Periksa kembali data Anda.");
     }
@@ -87,37 +94,6 @@ const Login = () => {
           maxWidth: "480px",
           flexShrink: 0,
         }}>
-          {/* Navigasi Log In / Register */}
-          <div style={{
-            backgroundColor: "#2563EB",
-            borderRadius: "12px",
-            padding: "6px",
-            display: "flex",
-            marginBottom: "32px"
-          }}>
-            <div style={{
-              flex: 1,
-              padding: "12px",
-              backgroundColor: "white",
-              color: "#2563EB",
-              borderRadius: "8px",
-              fontWeight: "600",
-              fontSize: "15px",
-              textAlign: "center"
-            }}>Log In</div>
-            <Link to="/register" style={{
-              flex: 1,
-              padding: "12px",
-              backgroundColor: "transparent",
-              color: "white",
-              borderRadius: "8px",
-              fontWeight: "600",
-              fontSize: "15px",
-              textAlign: "center",
-              textDecoration: "none"
-            }}>Register</Link>
-          </div>
-
           <h2 style={{
             fontSize: "28px",
             fontWeight: "bold",

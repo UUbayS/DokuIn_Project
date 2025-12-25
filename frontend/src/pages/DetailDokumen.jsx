@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import "./DetailDokumen.css"; // <-- Anda juga perlu file CSS baru
+import "./DetailDokumen.css";
 
 import {
   HiOutlineDocumentText,
@@ -12,9 +12,10 @@ import {
   HiCheckCircle,
   HiXCircle,
   HiMinusCircle,
+  HiTrash,
+  HiPaperAirplane,
 } from "react-icons/hi";
 
-// ... (Helper function getStatusProps)
 const getStatusProps = (status) => {
   switch (status) {
     case "Disetujui":
@@ -28,7 +29,6 @@ const getStatusProps = (status) => {
   }
 };
 
-// ... (Helper function formatDateTime dan formatDate)
 const formatDateTime = (isoString) => {
   return new Intl.DateTimeFormat('id-ID', {
     year: 'numeric', month: 'long', day: 'numeric',
@@ -37,45 +37,93 @@ const formatDateTime = (isoString) => {
 };
 
 const formatDate = (isoString) => {
-  return new Intl.DateTimeFormat('fr-CA').format(new Date(isoString));
+  return new Intl.DateTimeFormat('id-ID', {
+    year: 'numeric', month: '2-digit', day: '2-digit'
+  }).format(new Date(isoString));
 };
 
 const DetailDokumen = () => {
-  const { id } = useParams(); // Mendapatkan ID dari URL
-  const { isAuthLoading } = useAuth();
+  const { id } = useParams();
+  const { isAuthLoading, user } = useAuth();
   const [dokumen, setDokumen] = useState(null);
-  const [komentar, setKomentar] = useState([]); 
+  const [komentar, setKomentar] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  
+  // Form komentar
+  const [newComment, setNewComment] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [commentError, setCommentError] = useState("");
+
+  // Cek apakah user bisa comment (admin atau pemilik dokumen)
+  const canComment = user?.role === "Administrator" || 
+    (dokumen && dokumen.karyawanId === user?.id);
+
+  const fetchDetailDokumen = async () => {
+    if (isAuthLoading) return;
+    
+    setIsLoading(true);
+    try {
+      // 1. Ambil data dokumen
+      const resDokumen = await axios.get(`/api/dokumen/${id}`);
+      setDokumen(resDokumen.data);
+
+      // 2. Ambil data komentar
+      const resKomentar = await axios.get(`/api/comments/${id}`);
+      setKomentar(resKomentar.data);
+      
+      setError("");
+    } catch (err) {
+      setError("Gagal memuat detail dokumen.");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchDetailDokumen = async () => {
-      if (isAuthLoading) return; // Tunggu auth selesai
-      
-      setIsLoading(true);
-      try {
-        // 1. Ambil data dokumen
-        const resDokumen = await axios.get(`/api/dokumen/${id}`);
-        setDokumen(resDokumen.data);
-
-        // 2. Ambil data komentar (Ganti dengan endpoint Anda)
-        const mockKomentar = [
-          { _id: "k1", user: { username: "username2", role: "Admin" }, teks: "Excepteur sint occaecat cupidatat non proident...", tanggal: "2025-11-04T10:00:00.000Z" },
-          { _id: "k2", user: { username: "username", role: "Karyawan" }, teks: "Ut enim ad minim veniam, quis nostrud...", tanggal: "2025-11-04T11:30:00.000Z" },
-        ];
-        setKomentar(mockKomentar);
-        
-        setError("");
-      } catch (err) {
-        setError("Gagal memuat detail dokumen.");
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
     fetchDetailDokumen();
   }, [id, isAuthLoading]);
+
+  const handleSubmitComment = async (e) => {
+    e.preventDefault();
+    if (!newComment.trim()) {
+      setCommentError("Komentar tidak boleh kosong");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setCommentError("");
+
+    try {
+      const res = await axios.post(`/api/comments/${id}`, {
+        isi: newComment.trim()
+      });
+
+      // Tambahkan komentar baru ke list (di awal karena sorted desc)
+      setKomentar([res.data, ...komentar]);
+      setNewComment("");
+    } catch (err) {
+      console.error(err);
+      setCommentError(err.response?.data?.msg || "Gagal mengirim komentar");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    if (!window.confirm("Apakah Anda yakin ingin menghapus komentar ini?")) {
+      return;
+    }
+
+    try {
+      await axios.delete(`/api/comments/${commentId}`);
+      setKomentar(komentar.filter(k => k._id !== commentId));
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.msg || "Gagal menghapus komentar");
+    }
+  };
 
   if (isLoading || isAuthLoading) {
     return <div className="page-loading">Memuat detail dokumen...</div>;
@@ -129,25 +177,82 @@ const DetailDokumen = () => {
       </div>
 
       <div className="comment-list-card">
+        {/* Form input komentar */}
+        {canComment && (
+          <form onSubmit={handleSubmitComment} className="comment-form">
+            <div className="comment-input-wrapper">
+              <HiUserCircle size={40} className="comment-avatar" />
+              <div className="comment-input-container">
+                <textarea
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder="Tulis komentar..."
+                  rows={3}
+                  disabled={isSubmitting}
+                  className="comment-textarea"
+                />
+                {commentError && (
+                  <div className="comment-error">{commentError}</div>
+                )}
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting || !newComment.trim()}
+                  className="comment-submit-btn"
+                >
+                  <HiPaperAirplane size={18} />
+                  {isSubmitting ? "Mengirim..." : "Kirim"}
+                </button>
+              </div>
+            </div>
+          </form>
+        )}
+
+        {!canComment && (
+          <div className="comment-no-access">
+            <p>Anda hanya bisa berkomentar di dokumen Anda sendiri.</p>
+          </div>
+        )}
+
+        {/* Daftar komentar */}
         {komentar.length === 0 ? (
           <p className="no-comments">Belum ada komentar.</p>
         ) : (
-          komentar.map((kom) => (
-            <div className="comment-item" key={kom._id}>
-              <HiUserCircle size={40} className="comment-avatar" />
-              <div className="comment-content">
-                <div className="comment-header">
-                  <div className="comment-user-info">
-                    <span className="comment-user-name">{kom.user.username}</span>
-                    <span className="comment-user-role">{kom.user.role}</span>
+          komentar.map((kom) => {
+            const isOwner = kom.userId?._id === user?.id;
+            const isAdmin = user?.role === "Administrator";
+            const canDelete = isOwner || isAdmin;
+
+            return (
+              <div className="comment-item" key={kom._id}>
+                <HiUserCircle size={40} className="comment-avatar" />
+                <div className="comment-content">
+                  <div className="comment-header">
+                    <div className="comment-user-info">
+                      <span className="comment-user-name">
+                        {kom.userId?.namaPengguna || "Unknown"}
+                      </span>
+                      <span className={`comment-user-role ${kom.userId?.role === "Administrator" ? "role-admin" : "role-karyawan"}`}>
+                        {kom.userId?.role || "Karyawan"}
+                      </span>
+                    </div>
+                    <div className="comment-actions">
+                      <span className="comment-date">{formatDate(kom.createdAt)}</span>
+                      {canDelete && (
+                        <button 
+                          onClick={() => handleDeleteComment(kom._id)}
+                          className="comment-delete-btn"
+                          title="Hapus komentar"
+                        >
+                          <HiTrash size={16} />
+                        </button>
+                      )}
+                    </div>
                   </div>
-                  <span className="comment-date">{formatDate(kom.tanggal)}</span>
+                  <p className="comment-body">{kom.isi}</p>
                 </div>
-                <p className="comment-body">{kom.teks}</p>
-                <Link to="#" className="comment-reply">Reply</Link>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>

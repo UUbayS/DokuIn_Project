@@ -1,7 +1,6 @@
 // frontend/src/App.jsx
 
-import { Routes, Route,  Navigate} from "react-router-dom";
-import Register from "./pages/Register";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Layout from "./pages/Layout"; 
@@ -11,16 +10,19 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminDashboard from "./pages/admin/AdminDashboard"; 
 import AdminLayout from "./pages/admin/AdminLayout";      
 import AdminRoute from "./components/AdminRoute";
-
-// 1. IMPORT HALAMAN BARU
 import DetailDokumen from "./pages/DetailDokumen";
+
+// Admin Pages
+import KelolaDokumen from "./pages/admin/KelolaDokumen";
+import KelolaKaryawan from "./pages/admin/KelolaKaryawan";
 
 function App() {
   return (
     <Routes>
-      <Route path="/register" element={<Register />} />
+      {/* Public route - hanya Login */}
       <Route path="/login" element={<Login />} />
 
+      {/* Protected routes untuk Karyawan */}
       <Route
         path="/"
         element={
@@ -39,6 +41,8 @@ function App() {
       <Route path="/admin" element={<AdminRoute />}>
         <Route element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
+          <Route path="kelola-dokumen" element={<KelolaDokumen />} />
+          <Route path="kelola-karyawan" element={<KelolaKaryawan />} />
         </Route>
       </Route>
 

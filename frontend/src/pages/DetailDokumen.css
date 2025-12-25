@@ -195,3 +195,123 @@
 .page-error {
   color: #991b1b;
 }
+
+/* === Comment Form Styles === */
+.comment-form {
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 20px;
+  margin-bottom: 16px;
+}
+
+.comment-input-wrapper {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.comment-input-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.comment-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+  box-sizing: border-box;
+}
+
+.comment-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.comment-textarea:disabled {
+  background-color: #f9fafb;
+  cursor: not-allowed;
+}
+
+.comment-submit-btn {
+  align-self: flex-end;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.comment-submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.comment-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.comment-error {
+  color: #dc2626;
+  font-size: 13px;
+}
+
+.comment-no-access {
+  padding: 16px;
+  background-color: #fef3c7;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.comment-no-access p {
+  margin: 0;
+  color: #92400e;
+  font-size: 14px;
+}
+
+/* === Comment Actions === */
+.comment-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.comment-delete-btn {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.comment-delete-btn:hover {
+  color: #dc2626;
+  background-color: #fee2e2;
+}
+
+/* === Role Badges === */
+.comment-user-role.role-admin {
+  color: #1d4ed8;
+  font-weight: 500;
+}
+
+.comment-user-role.role-karyawan {
+  color: #6b7280;
+}
