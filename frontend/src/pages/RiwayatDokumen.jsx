@@ -2,56 +2,34 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./RiwayatDokumen.css"; 
-import { Link } from "react-router-dom"; 
+
+// Import Helpers
+import { downloadDocument } from "../utils/downloadHelper";
+import { getStatusConfig } from "../utils/statusHelper";
+import { formatDate } from "../utils/dateHelper"; 
+import { filterDocuments } from "../utils/filterHelper";
 
 import {
   HiDocumentText,
-  HiCheckCircle,
-  HiXCircle,
-  HiMinusCircle,
   HiEye,
   HiDownload,
+  HiSearch,
+  HiFilter,
+  HiFolder
 } from "react-icons/hi";
 
-// URL Backend (sama seperti di DokumenList.jsx)
-const BACKEND_URL = "http://localhost:5000";
-
-// Helper function untuk mendapatkan style status
-// Sedikit diubah dari Dashboard.jsx agar lebih sesuai dengan tabel
-const getStatusProps = (status) => {
-  switch (status) {
-    case "Disetujui":
-      return {
-        icon: <HiCheckCircle size={22} />,
-        colorClass: "status-disetujui",
-      };
-    case "Ditolak":
-      return {
-        icon: <HiXCircle size={22} />,
-        colorClass: "status-ditolak",
-      };
-    case "Menunggu Persetujuan":
-      return {
-        icon: <HiMinusCircle size={22} />,
-        colorClass: "status-pending",
-      };
-    default:
-      return {
-        icon: null,
-        colorClass: "status-gray",
-      };
-  }
-};
-
 const RiwayatDokumen = () => {
-  const { isAuthLoading } = useAuth();
+  const { isAuthLoading, user } = useAuth();
   const [dokumenList, setDokumenList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("Semua");
+  const [filterType, setFilterType] = useState("Semua");
 
-  // Logika pengambilan data, sama seperti di Dashboard.jsx
   const fetchDokumen = async () => {
     setIsLoading(true);
     try {
@@ -67,138 +45,147 @@ const RiwayatDokumen = () => {
     }
   };
 
+  const handleDownload = async (doc) => {
+    await downloadDocument(doc._id, doc.judul);
+  };
+
   useEffect(() => {
-    // Hanya fetch data jika autentikasi selesai
     if (!isAuthLoading) {
       fetchDokumen();
     }
-  }, [isAuthLoading]); // <-- Dependency-nya adalah isAuthLoading
+  }, [isAuthLoading]);
 
-// Import axios di bagian atas file jika belum
-  // import axios from "axios";
-
-  const handleDownload = (doc) => {
-    // Kita panggil endpoint download yang baru dibuat
-    // Token akan otomatis terkirim jika browser menyimpan cookie, 
-    // tapi karena window.open metode GET biasa, kita pakai cara direct link.
-    
-    // Jika rute backend menggunakan middleware 'auth', 
-    // maka window.open mungkin ditolak jika tidak mengirim token.
-    
-    // CARA 1 (Jika Endpoint Download TIDAK butuh Auth/Public):
-    // const downloadUrl = `${BACKEND_URL}/api/dokumen/download/${doc._id}`;
-    // window.open(downloadUrl, "_blank");
-
-    // CARA 2 (Jika Endpoint Download BUTUH Auth - Paling Aman):
-    // Kita gunakan fetch/axios untuk download blob agar bisa kirim Header Token
-    
-    axios({
-      url: `${BACKEND_URL}/api/dokumen/download/${doc._id}`,
-      method: 'GET',
-      responseType: 'blob', // Penting agar jadi file
-      headers: {
-        "x-auth-token": localStorage.getItem("token")
-      }
-    })
-    .then((response) => {
-      // Buat link download virtual di browser
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      
-      // Nama file default atau dari judul dokumen
-      link.setAttribute('download', `${doc.judul || 'dokumen'}.pdf`); 
-      
-      document.body.appendChild(link);
-      link.click();
-      
-      // Bersihkan
-      link.parentNode.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    })
-    .catch((error) => {
-      console.error("Download error:", error);
-      alert("Gagal mendownload file. Kemungkinan file fisik hilang atau token expired.");
-    });
-  }
-
-  // Tampilkan pesan loading
   if (isLoading || isAuthLoading) {
     return <div className="page-loading">Memuat riwayat dokumen...</div>;
   }
 
-  // Tampilkan pesan error
   if (error) {
     return <div className="page-error">{error}</div>;
   }
+
+  const filteredList = filterDocuments(dokumenList, searchTerm, filterStatus, filterType);
+
+  const uniqueTypes = ["Semua", ...new Set(dokumenList.map(d => d.jenisDokumen).filter(Boolean))];
 
   return (
     <div className="riwayat-page-container">
       <h1 className="main-content-title">Riwayat Dokumen</h1>
 
+      <div className="filter-section">
+        {/* 1. Search Box */}
+        <div className="search-box">
+          <HiSearch className="search-icon" />
+          <input 
+            type="text" 
+            placeholder="Cari nama dokumen..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
+        {/* 2. Filter Status */}
+        <div className="filter-box">
+          <HiFilter className="filter-icon" />
+          <select 
+            value={filterStatus} 
+            onChange={(e) => setFilterStatus(e.target.value)}
+          >
+            <option value="Semua">Semua Status</option>
+            <option value="Disetujui">Disetujui</option>
+            <option value="Menunggu Persetujuan">Menunggu</option>
+            <option value="Ditolak">Ditolak</option>
+          </select>
+        </div>
+
+        {/* 3. Filter Jenis Dokumen */}
+        <div className="filter-box">
+          <HiFolder className="filter-icon" />
+          <select 
+            value={filterType} 
+            onChange={(e) => setFilterType(e.target.value)}
+          >
+            <option value="Semua">Semua Jenis</option>
+            <option value="Pribadi">Pribadi</option>
+            <option value="Proposal">Proposal</option>
+            <option value="Surat">Surat Izin</option>
+            <option value="Kontrak">Laporan</option>
+            <option value="Lainnya">Lainnya</option> 
+          </select>
+        </div>
+      </div>
+
       <div className="riwayat-table-container">
         <table className="riwayat-table">
           <thead>
             <tr>
-              <th>Nama Dokumen</th>
-              <th>Status</th>
-              <th>Aksi</th>
+              <th className="th-left">Nama Dokumen</th>
+              <th className="th-center" width="200">Status</th>
+              <th className="th-center" width="100">Aksi</th>
             </tr>
           </thead>
           <tbody>
-            {dokumenList.length === 0 ? (
+            {filteredList.length === 0 ? (
               <tr>
                 <td colSpan="3" className="empty-row">
-                  Belum ada dokumen yang di-upload.
+                  {dokumenList.length === 0 
+                    ? "Belum ada dokumen yang di-upload." 
+                    : "Tidak ditemukan dokumen yang cocok."}
                 </td>
               </tr>
             ) : (
-              dokumenList.map((doc) => {
-                const statusProps = getStatusProps(doc.status);
+              filteredList.map((doc) => {
+                const statusConfig = getStatusConfig(doc.status);
+
+                const detailPath = user?.role === 'Administrator'
+                  ? `/admin/dokumen/${doc._id}` 
+                  : `/dokumen/${doc._id}`;
+
                 return (
                   <tr key={doc._id}>
                     {/* Sel Nama Dokumen */}
-                    <td className="cell-nama-dokumen">
-                      <HiDocumentText size={32} className="doc-icon" />
-                      <div className="doc-info">
-                        <span className="doc-name">
-                          {doc.judul || "Dokumen"}
-                        </span>
-                        <span className="doc-date">
-                          {new Intl.DateTimeFormat('fr-CA', { // Menggunakan locale fr-CA untuk format YYYY-MM-DD
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit'
-                          }).format(new Date(doc.tanggalUnggah))}
-                        </span>
+                    <td>
+                      <div className="doc-wrapper">
+                        <div className="doc-icon-box">
+                           <HiDocumentText size={28} />
+                        </div>
+                        <div> 
+                          <div className="doc-info-name">
+                            <span className="doc-name">{doc.judul || "Dokumen"}</span>
+                          </div>
+                          <div className="doc-info-date">
+                            {formatDate(doc.tanggalUnggah)}
+                          </div>
+                        </div>
                       </div>
                     </td>
 
                     {/* Sel Status */}
-                    <td className="cell-status">
-                      <div className={`status-badge ${statusProps.colorClass}`}>
+                    <td className="cell-center">
+                      <div className={`status-badge ${statusConfig.colorClass}`}>
                         <span>{doc.status}</span>
-                        {statusProps.icon}
+                        {statusConfig.icon}
                       </div>
                     </td>
 
-                    {/* 2. MODIFIKASI SEL AKSI */}
-                    <td className="cell-aksi">
-                      <Link
-                        to={`/dokumen/${doc._id}`} // Arahkan ke rute baru
-                        className="action-button"
-                        title="Lihat Detail Dokumen"
-                      >
-                        <HiEye size={22} />
-                      </Link>
-                      <button
-                          type="button"
-                          onClick={() => handleDownload(doc)}
-                          className="action-button btn-download"
-                          title="Download"
+                    {/* Sel Aksi */}
+                    <td className="cell-center">
+                      <div className="actions-wrapper">
+                        <Link
+                          to={detailPath}
+                          className="action-button btn-view"
+                          title="Lihat Detail Dokumen"
                         >
-                          <HiDownload size={20} />
-                      </button>
+                          <HiEye size={20} />
+                        </Link>
+                        <button
+                            type="button"
+                            onClick={() => handleDownload(doc)}
+                            className="action-button btn-download"
+                            title="Download"
+                          >
+                            <HiDownload size={20} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );

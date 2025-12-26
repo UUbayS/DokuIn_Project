@@ -5,42 +5,23 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+
+import { downloadDocument } from "../../utils/downloadHelper";
+import { getStatusConfig } from "../../utils/statusHelper";
+import { filterDocuments } from "../../utils/filterHelper";
 import "./KelolaDokumen.css";
 
 import {
   HiDocumentText,
   HiCheckCircle,
   HiXCircle,
-  HiClock,
   HiDownload,
   HiUser,
   HiEye,
+  HiSearch,
+  HiFilter,
+  HiFolder
 } from "react-icons/hi";
-
-const getStatusProps = (status) => {
-  switch (status) {
-    case "Disetujui":
-      return {
-        icon: <HiCheckCircle />,
-        color: "status-green",
-      };
-    case "Ditolak":
-      return {
-        icon: <HiXCircle />,
-        color: "status-red",
-      };
-    case "Menunggu Persetujuan":
-      return {
-        icon: <HiClock />,
-        color: "status-yellow",
-      };
-    default:
-      return {
-        icon: null,
-        color: "status-gray",
-      };
-  }
-};
 
 const KelolaDokumen = () => {
   const { isAuthLoading } = useAuth();
@@ -48,6 +29,9 @@ const KelolaDokumen = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [actionLoading, setActionLoading] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("Semua");
+  const [filterType, setFilterType] = useState("Semua");
 
   const fetchAllDokumen = async () => {
     setIsLoading(true);
@@ -70,6 +54,10 @@ const KelolaDokumen = () => {
     }
   }, [isAuthLoading]);
 
+  const filteredList = filterDocuments(dokumenList, searchTerm, filterStatus, filterType);
+
+  const uniqueTypes = ["Semua", ...new Set(dokumenList.map(d => d.jenisDokumen).filter(Boolean))];
+
   const handleUpdateStatus = async (docId, newStatus) => {
     setActionLoading(docId);
     try {
@@ -89,10 +77,8 @@ const KelolaDokumen = () => {
     }
   };
 
-  const handleDownload = (docId) => {
-    // Untuk download, kita perlu token di URL atau header
-    const token = localStorage.getItem("token");
-    window.open(`http://localhost:5000/api/dokumen/download/${docId}?token=${token}`, "_blank");
+  const handleDownload = async (doc) => {
+    await downloadDocument(doc._id, doc.judul);
   };
 
   // Stats
@@ -133,6 +119,47 @@ const KelolaDokumen = () => {
           <div style={{ color: "#991b1b", fontSize: "14px" }}>Ditolak</div>
         </div>
       </div>
+      <div className="filter-section">
+        {/* 1. Search Box */}
+        <div className="search-box">
+          <HiSearch className="search-icon" />
+          <input 
+            type="text" 
+            placeholder="Cari nama dokumen..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
+        {/* 2. Filter Status */}
+        <div className="filter-box">
+          <HiFilter className="filter-icon" />
+          <select 
+            value={filterStatus} 
+            onChange={(e) => setFilterStatus(e.target.value)}
+          >
+            <option value="Semua">Semua Status</option>
+            <option value="Disetujui">Disetujui</option>
+            <option value="Menunggu Persetujuan">Menunggu</option>
+            <option value="Ditolak">Ditolak</option>
+          </select>
+        </div>
+        {/* 3. Filter Jenis Dokumen */}
+        <div className="filter-box">
+          <HiFolder className="filter-icon" />
+          <select 
+            value={filterType} 
+            onChange={(e) => setFilterType(e.target.value)}
+          >
+            <option value="Semua">Semua Jenis</option>
+            <option value="Pribadi">Pribadi</option>
+            <option value="Proposal">Proposal</option>
+            <option value="Surat">Surat Izin</option>
+            <option value="Kontrak">Laporan</option>
+            <option value="Lainnya">Lainnya</option> 
+          </select>
+        </div>
+      </div>
 
       {/* Document List */}
       <div style={{ background: "#fff", borderRadius: "8px", boxShadow: "0 2px 4px rgba(0,0,0,0.1)", overflow: "hidden" }}>
@@ -142,7 +169,7 @@ const KelolaDokumen = () => {
           <div style={{ padding: "40px", textAlign: "center", color: "#dc2626" }}>{error}</div>
         ) : dokumenList.length === 0 ? (
           <div style={{ padding: "40px", textAlign: "center", color: "#666" }}>Belum ada dokumen.</div>
-        ) : (
+        ) : ( 
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead style={{ background: "#3b82f6", color: "white" }}>
               <tr>
@@ -154,8 +181,17 @@ const KelolaDokumen = () => {
               </tr>
             </thead>
             <tbody>
-              {dokumenList.map((doc) => {
-                const statusProps = getStatusProps(doc.status);
+              {filteredList.length === 0 ? (
+                <tr>
+                  <td colSpan="3" className="empty-row">
+                    {dokumenList.length === 0 
+                      ? "Belum ada dokumen yang di-upload." 
+                      : "Tidak ditemukan dokumen yang cocok."}
+                  </td>
+                </tr>
+              ) : (
+              filteredList.map((doc) => {
+                const statusProps = getStatusConfig(doc.status);
                 const isPending = doc.status === "Menunggu Persetujuan";
                 const isUpdating = actionLoading === doc._id;
 
@@ -190,12 +226,12 @@ const KelolaDokumen = () => {
                         borderRadius: "20px",
                         fontSize: "13px",
                         fontWeight: "500",
-                        background: statusProps.color === "status-green" ? "#d1fae5" : 
-                                   statusProps.color === "status-red" ? "#fee2e2" : 
-                                   statusProps.color === "status-yellow" ? "#fef3c7" : "#f3f4f6",
-                        color: statusProps.color === "status-green" ? "#065f46" : 
-                               statusProps.color === "status-red" ? "#991b1b" : 
-                               statusProps.color === "status-yellow" ? "#92400e" : "#374151"
+                        background: statusProps.colorClass === "status-disetujui" ? "#d1fae5" : 
+                                   statusProps.colorClass === "status-ditolak" ? "#fee2e2" : 
+                                   statusProps.colorClass === "status-pending" ? "#fef3c7" : "#f3f4f6",
+                        color: statusProps.colorClass === "status-disetujui" ? "#065f46" : 
+                               statusProps.colorClass === "status-ditolak" ? "#991b1b" : 
+                               statusProps.colorClass === "status-pending" ? "#92400e" : "#374151"
                       }}>
                         {statusProps.icon}
                         {doc.status}
@@ -264,7 +300,7 @@ const KelolaDokumen = () => {
                           <HiEye size={16} />
                         </Link>
                         <button
-                          onClick={() => handleDownload(doc._id)}
+                          onClick={() => handleDownload(doc)}
                           style={{
                             padding: "8px 12px",
                             background: "#e0f2fe",
@@ -284,7 +320,8 @@ const KelolaDokumen = () => {
                     </td>
                   </tr>
                 );
-              })}
+              })
+            )}
             </tbody>
           </table>
         )}

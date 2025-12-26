@@ -42,6 +42,7 @@ function App() {
         <Route element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="kelola-dokumen" element={<KelolaDokumen />} />
+          <Route path="dokumen/:id" element={<DetailDokumen />} />
           <Route path="kelola-karyawan" element={<KelolaKaryawan />} />
         </Route>
       </Route>
