@@ -136,6 +136,7 @@ const UploadForm = () => {
                 value={namaDokumen}
                 onChange={(e) => setNamaDokumen(e.target.value)}
                 placeholder="Nama Dokumen"
+                required
               />
             </div>
             
@@ -145,11 +146,13 @@ const UploadForm = () => {
                 id="jenisDokumen"
                 value={jenisDokumen}
                 onChange={(e) => setJenisDokumen(e.target.value)}
+                required
               >
                 <option value="" disabled>Pilih Jenis Dokumen</option>
                 <option value="Pribadi">Pribadi</option>
-                <option value="Pekerjaan">Pekerjaan</option>
-                <option value="Akademik">Akademik</option>
+                <option value="Proposal">Proposal</option>
+                <option value="Surat">Surat Izin</option>
+                <option value="Kontrak">Laporan</option>
                 <option value="Lainnya">Lainnya</option>
               </select>
             </div>
@@ -184,6 +187,7 @@ const UploadForm = () => {
                 onChange={onFileChange}
                 accept="application/pdf" // Hanya PDF
                 hidden
+                required
               />
               <HiUpload size={48} className="upload-drop-icon" />
               {file ? (

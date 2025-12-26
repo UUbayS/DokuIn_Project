@@ -5,42 +5,20 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./DetailDokumen.css";
+import { useNavigate, useLocation } from "react-router-dom";
+import { PDFDocument } from 'pdf-lib';
+
+import { getStatusConfig } from "../utils/statusHelper";
+import { formatDate, formatDateTime } from "../utils/dateHelper";
 
 import {
   HiOutlineDocumentText,
   HiUserCircle,
-  HiCheckCircle,
-  HiXCircle,
-  HiMinusCircle,
   HiTrash,
   HiPaperAirplane,
+  HiDownload,
+  HiExclamation
 } from "react-icons/hi";
-
-const getStatusProps = (status) => {
-  switch (status) {
-    case "Disetujui":
-      return { icon: <HiCheckCircle size={24} />, colorClass: "status-disetujui" };
-    case "Ditolak":
-      return { icon: <HiXCircle size={24} />, colorClass: "status-ditolak" };
-    case "Menunggu Persetujuan":
-      return { icon: <HiMinusCircle size={24} />, colorClass: "status-pending" };
-    default:
-      return { icon: null, colorClass: "status-gray" };
-  }
-};
-
-const formatDateTime = (isoString) => {
-  return new Intl.DateTimeFormat('id-ID', {
-    year: 'numeric', month: 'long', day: 'numeric',
-    hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jakarta'
-  }).format(new Date(isoString));
-};
-
-const formatDate = (isoString) => {
-  return new Intl.DateTimeFormat('id-ID', {
-    year: 'numeric', month: '2-digit', day: '2-digit'
-  }).format(new Date(isoString));
-};
 
 const DetailDokumen = () => {
   const { id } = useParams();
@@ -49,6 +27,11 @@ const DetailDokumen = () => {
   const [komentar, setKomentar] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [fileType, setFileType] = useState("");
+  const [isPreviewLoading, setIsPreviewLoading] = useState(false);
   
   // Form komentar
   const [newComment, setNewComment] = useState("");
@@ -59,18 +42,55 @@ const DetailDokumen = () => {
   const canComment = user?.role === "Administrator" || 
     (dokumen && dokumen.karyawanId === user?.id);
 
+  // Ubah parameter agar menerima docTitle
+const fetchFilePreview = async (docId, docTitle) => {
+  setIsPreviewLoading(true);
+  try {
+    const res = await axios.get(`/api/dokumen/download/${docId}`, {
+      responseType: "arraybuffer", 
+      headers: { "x-auth-token": localStorage.getItem("token") }
+    });
+
+    const contentType = res.headers["content-type"] || "application/pdf";
+    setFileType(contentType);
+
+    if (contentType === "application/pdf") {
+      const pdfDoc = await PDFDocument.load(res.data);
+      pdfDoc.setTitle(docTitle || "Dokumen Preview");
+
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      setPreviewUrl(url);
+    } 
+    else {
+      const blob = new Blob([res.data], { type: contentType });
+      const url = URL.createObjectURL(blob);
+      setPreviewUrl(url);
+    }
+
+  } catch (err) {
+    console.error("Gagal memuat preview:", err);
+  } finally {
+    setIsPreviewLoading(false);
+  }
+};
+
   const fetchDetailDokumen = async () => {
     if (isAuthLoading) return;
     
     setIsLoading(true);
     try {
-      // 1. Ambil data dokumen
+      // Ambil data dokumen
       const resDokumen = await axios.get(`/api/dokumen/${id}`);
       setDokumen(resDokumen.data);
 
-      // 2. Ambil data komentar
+      // Ambil data komentar
       const resKomentar = await axios.get(`/api/comments/${id}`);
       setKomentar(resKomentar.data);
+
+      //Ambil data preview file
+      fetchFilePreview(id, resDokumen.data.judul);
       
       setError("");
     } catch (err) {
@@ -81,9 +101,61 @@ const DetailDokumen = () => {
     }
   };
 
+  const renderPreview = () => {
+    if (isPreviewLoading) {
+      return <div className="preview-loading">Memuat tampilan dokumen...</div>;
+    }
+
+    if (!previewUrl) {
+      return (
+        <div className="preview-error">
+           <HiExclamation size={40} />
+           <p>Gagal memuat file atau file tidak ditemukan.</p>
+        </div>
+      );
+    }
+
+    // A. Jika PDF
+    if (fileType === "application/pdf") {
+      return (
+        <iframe 
+          src={previewUrl} 
+          title="Dokumen Preview"
+          className="preview-iframe"
+        />
+      );
+    }
+
+    // B. Jika Gambar
+    if (fileType.startsWith("image/")) {
+      return (
+        <img 
+          src={previewUrl} 
+          alt="Preview Dokumen" 
+          className="preview-image"
+        />
+      );
+    }
+
+    // C. File Lain (Word, Excel, ZIP) - Browser tidak bisa preview native
+    return (
+      <div className="preview-unsupported">
+        <HiOutlineDocumentText size={60} />
+        <p>Pratinjau tidak tersedia untuk tipe file ini.</p>
+        <button onClick={handleManualDownload} className="btn-download-manual">
+          <HiDownload size={18} /> Download File
+        </button>
+      </div>
+    );
+  };
+
   useEffect(() => {
     fetchDetailDokumen();
-  }, [id, isAuthLoading]);
+    if (user?.role === "Administrator" && !location.pathname.startsWith("/admin")) {
+      // Lempar ke URL Admin
+      navigate(`/admin/dokumen/${id}`);
+    }
+  }, [user, location, id, isAuthLoading]);
 
   const handleSubmitComment = async (e) => {
     e.preventDefault();
@@ -100,7 +172,6 @@ const DetailDokumen = () => {
         isi: newComment.trim()
       });
 
-      // Tambahkan komentar baru ke list (di awal karena sorted desc)
       setKomentar([res.data, ...komentar]);
       setNewComment("");
     } catch (err) {
@@ -137,7 +208,7 @@ const DetailDokumen = () => {
     return <div className="page-error">Dokumen tidak ditemukan.</div>;
   }
   
-  const statusProps = getStatusProps(dokumen.status);
+  const statusConfig = getStatusConfig(dokumen.status);
 
   return (
     <div className="detail-page-container">
@@ -146,28 +217,32 @@ const DetailDokumen = () => {
         <h2>Detail Dokumen</h2>
       </div>
 
+      {/* === Bagian Isi Detail Dokumen === */}
       <div className="document-card">
         <div className="document-content">
-          <div className="doc-icon-placeholder">
-            <HiOutlineDocumentText size={64} />
-          </div>
           <div className="doc-info-main">
             <div className="doc-header">
               <h1 className="doc-title">{dokumen.judul || "Dokumen"}</h1>
-              <div className={`doc-status ${statusProps.colorClass}`}>
-                {statusProps.icon}
+              <div className={`doc-status ${statusConfig.colorClass}`}>
+                {statusConfig.icon}
                 <span>{dokumen.status}</span>
               </div>
             </div>
+            
             <div className="doc-meta">
               <span>Tanggal Upload: {formatDateTime(dokumen.tanggalUnggah)}</span>
               <span>Jenis Dokumen: {dokumen.jenisDokumen || "Tidak ada"}</span>
             </div>
+            
             <div className="doc-description">
               <h3>Deskripsi</h3>
               <p>{dokumen.deskripsi || "Tidak ada deskripsi."}</p>
             </div>
           </div>
+        </div>
+        {/* === Bagian Preview Dokumen === */}
+        <div className="doc-preview-container">
+          {renderPreview()}
         </div>
       </div>
 
@@ -177,7 +252,6 @@ const DetailDokumen = () => {
       </div>
 
       <div className="comment-list-card">
-        {/* Form input komentar */}
         {canComment && (
           <form onSubmit={handleSubmitComment} className="comment-form">
             <div className="comment-input-wrapper">
@@ -213,7 +287,6 @@ const DetailDokumen = () => {
           </div>
         )}
 
-        {/* Daftar komentar */}
         {komentar.length === 0 ? (
           <p className="no-comments">Belum ada komentar.</p>
         ) : (

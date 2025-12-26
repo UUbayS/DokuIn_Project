@@ -44,6 +44,74 @@
   margin-top: 0.25rem;
 }
 
+
+/* Filter & Search */
+.filter-section {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap; /* Agar responsif di layar kecil */
+}
+
+/* Kotak Pencarian */
+.search-box {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1; /* Mengisi ruang sisa agar search box panjang */
+  min-width: 250px;
+  transition: all 0.2s;
+}
+
+.search-box:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); /* Efek glow biru saat diklik */
+}
+
+.search-icon {
+  color: #9ca3af;
+  font-size: 20px;
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  color: #1f2937;
+}
+
+/* Kotak Filter Dropdown */
+.filter-box {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 200px;
+}
+
+.filter-icon {
+  color: #9ca3af;
+  font-size: 20px;
+}
+
+.filter-box select {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  color: #1f2937;
+  background: transparent;
+  cursor: pointer;
+}
+
 /* Table Container */
 .dokumen-table-container {
   background: #ffffff;

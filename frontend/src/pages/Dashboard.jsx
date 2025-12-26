@@ -6,37 +6,12 @@ import { useAuth } from "../context/AuthContext";
 import StatsCard from "../components/statsCard";
 import "./Dashboard.css"
 
-import {
-  HiDocumentText,
-  HiCheckCircle,
-  HiXCircle,
-  HiClock,
-} from "react-icons/hi";
+import { getStatusConfig } from "../utils/statusHelper";
+import { formatDate } from "../utils/dateHelper";
 
-const getStatusProps = (status) => {
-  switch (status) {
-    case "Disetujui":
-      return {
-        icon: <HiCheckCircle />,
-        color: "status-green",
-      };
-    case "Ditolak":
-      return {
-        icon: <HiXCircle />,
-        color: "status-red",
-      };
-    case "Menunggu Persetujuan":
-      return {
-        icon: <HiClock />,
-        color: "status-yellow",
-      };
-    default:
-      return {
-        icon: null,
-        color: "status-gray",
-      };
-  }
-};
+import {
+  HiDocumentText
+} from "react-icons/hi";
 
 const Dashboard = () => {
   const { isAuthLoading, user } = useAuth();
@@ -76,6 +51,8 @@ const Dashboard = () => {
   ).length;
 
   const dokumenTerbaru = dokumenList.slice(0, 3);
+
+
 
   return (
     <>
@@ -119,7 +96,7 @@ const Dashboard = () => {
           ) : (
             <ul>
               {dokumenTerbaru.map((doc) => {
-                const statusProps = getStatusProps(doc.status);
+                const statusProps = getStatusConfig(doc.status);
                 return (
                   <li key={doc._id} className="recent-doc-item">
                     <div className="doc-info">
@@ -135,7 +112,7 @@ const Dashboard = () => {
                         </div>
                       </div>
                     </div>
-                    <div className={`doc-status ${statusProps.color}`}>
+                    <div className={`doc-status ${statusProps.colorClass}`}>
                       <span>{doc.status}</span>
                       <span className="doc-status-icon">
                         {statusProps.icon}

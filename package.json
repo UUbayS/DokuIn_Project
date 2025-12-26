@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "cloudinary": "^1.41.3",
-    "multer-storage-cloudinary": "^4.0.0"
+    "multer-storage-cloudinary": "^4.0.0",
+    "pdf-lib": "^1.17.1"
   }
 }
