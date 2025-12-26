@@ -152,7 +152,7 @@ const UploadForm = () => {
                 <option value="Pribadi">Pribadi</option>
                 <option value="Proposal">Proposal</option>
                 <option value="Surat">Surat Izin</option>
-                <option value="Kontrak">Laporan</option>
+                <option value="Laporan">Laporan</option>
                 <option value="Lainnya">Lainnya</option>
               </select>
             </div>

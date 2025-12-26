@@ -4,14 +4,18 @@ const Dokumen = require("../models/Dokumen");
 
 exports.uploadDokumen = async (req, res) => {
   try {
-    const { judul } = req.body;
+    const { judul, jenisDokumen } = req.body;
     if (!req.file) {
       return res.status(400).json({ msg: "File tidak ditemukan atau format salah" });
     }
 
+    if (!jenisDokumen) {
+      return res.status(400).json({ msg: "Jenis dokumen wajib diisi" });
+    }
 
     const newDokumen = new Dokumen({
       judul: judul,
+      jenisDokumen: jenisDokumen,
       filePath: req.file.path.replace(/\\/g, "/"),
       deskripsi: req.body.deskripsi,
       karyawanId: req.user.id, 
