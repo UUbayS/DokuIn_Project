@@ -14,6 +14,11 @@ const DokumenSchema = new mongoose.Schema({
     type: String, // 'String judul' [cite: 1026]
     required: true,
   },
+  jenisDokumen: {
+    type: String,
+    enum: ['Pribadi', 'Proposal', 'Surat', 'Laporan', 'Lainnya'],
+    required: true,
+  },
   status: {
     type: String, // 'String status' [cite: 1029]
     default: "Menunggu Persetujuan",
