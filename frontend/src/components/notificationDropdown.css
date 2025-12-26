@@ -43,6 +43,10 @@
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #f0f0f0;
   transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+.notification-item.unread {
+  background-color: #e6f7ff;
 }
 .notification-item:last-child {
   border-bottom: none;
