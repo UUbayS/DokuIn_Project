@@ -33,6 +33,24 @@
   color: #4b5563;
   padding: 0;
   transition: color 0.2s ease;
+  position: relative; /* Setup for badge positioning */
+}
+
+.notification-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background-color: #ef4444;
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.65rem;
+  font-weight: bold;
+  pointer-events: none;
 }
 
 .header-icon-btn:hover {

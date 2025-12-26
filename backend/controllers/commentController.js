@@ -2,6 +2,7 @@
 
 const Comment = require("../models/Comment");
 const Dokumen = require("../models/Dokumen");
+const { createNotification } = require("./notificationController"); // [NEW]
 
 /**
  * @route   GET api/comments/:dokumenId
@@ -57,6 +58,16 @@ exports.addComment = async (req, res) => {
     });
 
     const comment = await newComment.save();
+
+    // [NEW] Notifikasi ke Pemilik Dokumen jika Admin yang komen
+    if (req.user.role === "Administrator") {
+      await createNotification(
+        dokumen.karyawanId,
+        `Admin memberikan komentar pada dokumen "${dokumen.judul}".`,
+        "NEW_COMMENT",
+        dokumenId
+      );
+    }
 
     // Populate user info sebelum return
     const populatedComment = await Comment.findById(comment._id)

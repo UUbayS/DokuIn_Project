@@ -1,6 +1,8 @@
 // backend/controllers/dokumenController.js
 
 const Dokumen = require("../models/Dokumen");
+const User = require("../models/User"); // [NEW] Import User
+const { createNotification } = require("./notificationController"); // [NEW] Import Notification logic
 
 exports.uploadDokumen = async (req, res) => {
   try {
@@ -22,6 +24,18 @@ exports.uploadDokumen = async (req, res) => {
     });
 
     const dokumen = await newDokumen.save();
+
+    // [NEW] Notifikasi ke semua Admin
+    const admins = await User.find({ role: "Administrator" });
+    for (const admin of admins) {
+      await createNotification(
+        admin._id,
+        `Dokumen baru "${judul}" menunggu persetujuan.`,
+        "NEW_DOCUMENT",
+        dokumen._id
+      );
+    }
+
     res.status(201).json({ msg: "Dokumen berhasil di-upload", dokumen });
   } catch (err) {
     console.error(err.message);
@@ -151,6 +165,14 @@ exports.updateStatusDokumen = async (req, res) => {
     if (!dokumen) {
       return res.status(404).json({ msg: 'Dokumen tidak ditemukan' });
     }
+
+    // [NEW] Notifikasi ke Pemilik Dokumen
+    await createNotification(
+      dokumen.karyawanId._id, // Karena sudah dipopulate
+      `Dokumen Anda "${dokumen.judul}" telah ${status}.`,
+      status === "Disetujui" ? "APPROVED" : "REJECTED",
+      dokumen._id
+    );
 
     res.json({ msg: `Status dokumen berhasil diubah menjadi "${status}"`, dokumen });
   } catch (err) {

@@ -21,6 +21,7 @@ app.use('/api/auth', require('./routes/auth'));
 
 app.use("/api/dokumen", require("./routes/dokumen"));
 app.use("/api/comments", require("./routes/comments"));
+app.use("/api/notifications", require("./routes/notification"));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const PORT = process.env.PORT || 5000;
