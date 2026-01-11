@@ -184,19 +184,21 @@ const UploadForm = () => {
               <input
                 type="file"
                 id="file-upload"
+                className="file-input-hidden"
                 onChange={onFileChange}
                 accept="application/pdf" // Hanya PDF
-                hidden
                 required
               />
-              <HiUpload size={48} className="upload-drop-icon" />
-              {file ? (
-                <span className="upload-drop-text-filled">{file.name}</span>
-              ) : (
-                <span className="upload-drop-text">
-                  Pilih atau Masukkan Dokumen
-                </span>
-              )}
+              <div className="upload-placeholder-content">
+                <HiUpload size={48} className="upload-drop-icon" />
+                {file ? (
+                  <span className="upload-drop-text-filled">{file.name}</span>
+                ) : (
+                  <span className="upload-drop-text">
+                    Pilih atau Masukkan Dokumen
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
