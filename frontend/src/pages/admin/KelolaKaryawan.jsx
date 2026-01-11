@@ -27,18 +27,28 @@ const KelolaKaryawan = () => {
     setMessage({ type: "", text: "" });
 
     // Validasi
-    if (!namaPengguna || !email || !kataSandi) {
-      setMessage({ type: "error", text: "Semua field wajib diisi!" });
+    if (!namaPengguna) {
+      setMessage({ type: "error", text: "Nama Pengguna wajib diisi!" });
       return;
     }
 
-    if (kataSandi !== konfirmasiSandi) {
-      setMessage({ type: "error", text: "Konfirmasi password tidak cocok!" });
+    if (!email) {
+      setMessage({ type: "error", text: "Email wajib diisi!" });
+      return;
+    }
+
+    if (!kataSandi) {
+      setMessage({ type: "error", text: "Kata Sandi wajib diisi!" });
       return;
     }
 
     if (kataSandi.length < 6) {
       setMessage({ type: "error", text: "Password minimal 6 karakter!" });
+      return;
+    }
+
+    if (kataSandi !== konfirmasiSandi) {
+      setMessage({ type: "error", text: "Konfirmasi password tidak cocok!" });
       return;
     }
 

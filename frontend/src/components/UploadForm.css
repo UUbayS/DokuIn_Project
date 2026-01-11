@@ -64,6 +64,7 @@
 }
 
 /* Styling Area Drag & Drop (Kolom Kanan) */
+
 .upload-area-label {
   font-weight: 600;
   color: var(--dark-color);
@@ -73,6 +74,7 @@
 }
 
 .upload-drop-area {
+  position: relative;
   border: 2px dashed #d1d5db;
   border-radius: 8px;
   padding: 2.5rem;
@@ -114,6 +116,28 @@
   color: var(--dark-color);
   font-weight: 600;
   word-break: break-all;
+}
+
+/* CLASS BARU: Input File Transparan */
+.file-input-hidden {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0; /* Membuat input tidak terlihat mata, tapi terbaca browser */
+  z-index: 10; /* Berada di lapisan paling atas agar menangkap klik */
+  cursor: pointer;
+}
+
+/* CLASS BARU: Pembungkus Icon & Teks */
+.upload-placeholder-content {
+  pointer-events: none; /* Klik tembus ke input di belakangnya */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
 }
 
 /* Tombol Aksi Form */
