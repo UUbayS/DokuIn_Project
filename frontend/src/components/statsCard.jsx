@@ -2,14 +2,16 @@
 
 import "./statsCard.css"
 
-const StatsCard = ({ title, value, colorClass }) => {
-  const cardClasses = `stats-card ${colorClass}`;
+const StatsCard = ({title, value, colorClass }) => {
+  const cardClasses = `stat-item ${colorClass}`;
 
   return (
-    <div className={cardClasses}>
-      <div className="stats-card-title">{title}</div>
-      <div className="stats-card-value">{value}</div>
-    </div>
+    <div className="stats-grid">
+      <div className={cardClasses}>
+        <div className="stat-number">{value}</div>
+        <div className="stat-label">{title}</div>
+      </div>
+    </div>   
   );
 };
 

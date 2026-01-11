@@ -62,16 +62,16 @@
   border-bottom: none;
 }
 
-/* === BAGIAN KIRI: ICON DAN TEKS (PERBAIKAN UTAMA) === */
+/* === BAGIAN KIRI: ICON DAN TEKS === */
 .doc-info {
-  display: flex !important;       /* Paksa menjadi baris */
-  flex-direction: row !important; /* Paksa ke samping */
-  align-items: center;            /* Tengah secara vertikal */
-  gap: 16px;                      /* Jarak antara Icon dan Teks */
+  display: flex !important;      
+  flex-direction: row !important; 
+  align-items: center;            
+  gap: 16px;                      
 }
 
 .doc-info-icon {
-  flex-shrink: 0;                 /* Agar icon tidak tergencet */
+  flex-shrink: 0;                
   color: #6b7280;
 }
 

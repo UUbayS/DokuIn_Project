@@ -3,11 +3,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-import StatsCard from "../components/statsCard";
+import StatsCard from "../components/statscard";
 import "./Dashboard.css"
 
 import { getStatusConfig } from "../utils/statusHelper";
-import { formatDate } from "../utils/dateHelper";
 
 import {
   HiDocumentText
@@ -60,24 +59,24 @@ const Dashboard = () => {
 
       <div className="stats-grid">
         <StatsCard
-          title="Total Dokumen:"
+          title="Total Dokumen"
           value={totalDokumen}
-          colorClass="card-white"
+          colorClass="total"
         />
         <StatsCard
           title="Disetujui"
           value={totalDisetujui}
-          colorClass="card-green"
+          colorClass="approved"
         />
         <StatsCard
           title="Menunggu Persetujuan"
           value={totalPending}
-          colorClass="card-yellow"
+          colorClass="pending"
         />
         <StatsCard
           title="Ditolak"
           value={totalDitolak}
-          colorClass="card-red"
+          colorClass="rejected"
         />
       </div>
 

@@ -1,9 +1,11 @@
 // frontend/src/pages/admin/AdminDashboard.jsx
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
+import "./AdminDashboard.css";
+import StatsCard from "../../components/statscard";
 
 import {
   HiDocumentText,
@@ -39,87 +41,107 @@ const AdminDashboard = () => {
     }
   }, [isAuthLoading]);
 
-  const totalDokumen = dokumenList.length;
-  const totalDisetujui = dokumenList.filter((d) => d.status === "Disetujui").length;
-  const totalPending = dokumenList.filter((d) => d.status === "Menunggu Persetujuan").length;
-  const totalDitolak = dokumenList.filter((d) => d.status === "Ditolak").length;
+  const accessibleDocuments = useMemo(() => {
+    if (!user || dokumenList.length === 0) return [];
 
-  const pendingDocs = dokumenList
+    // Jika Super Admin, kembalikan semua
+    if (user.role === 'Administrator') {
+      return dokumenList;
+    }
+
+    // Jika HRD: Hanya Pribadi & Surat (Surat Izin)
+    if (user.role === 'hrd') {
+      return dokumenList.filter(doc => 
+        ['Pribadi', 'Surat', 'Surat Izin'].includes(doc.jenisDokumen)
+      );
+    }
+
+    // Jika Operational Manager: Hanya Proposal & Laporan
+    if (user.role === 'operational_manager') {
+      return dokumenList.filter(doc => 
+        ['Proposal', 'Laporan'].includes(doc.jenisDokumen)
+      );
+    }
+
+    return [];
+  }, [dokumenList, user]);
+
+  const totalDokumen = accessibleDocuments.length;
+  const totalPending = accessibleDocuments.filter(
+    (d) => d.status === "Menunggu Persetujuan"
+  ).length;
+  const totalDisetujui = accessibleDocuments.filter(
+    (d) => d.status === "Disetujui"
+  ).length;
+  const totalDitolak = accessibleDocuments.filter(
+    (d) => d.status === "Ditolak"
+  ).length;
+
+  const pendingDocs = accessibleDocuments
     .filter((d) => d.status === "Menunggu Persetujuan")
     .slice(0, 5);
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1 style={{ marginBottom: "20px" }}>
+    <div className="admin-dashboard-container">
+      <h1 className="admin-dashboard-header">
         Selamat Datang, {user ? user.namaPengguna : "Admin"}!
       </h1>
 
-      {/* Stats */}
-      <div style={{ display: "flex", gap: "15px", marginBottom: "30px", flexWrap: "wrap" }}>
-        <div style={{ padding: "20px 30px", background: "#fff", borderRadius: "8px", boxShadow: "0 2px 4px rgba(0,0,0,0.1)", minWidth: "150px" }}>
-          <div style={{ fontSize: "28px", fontWeight: "bold" }}>{totalDokumen}</div>
-          <div style={{ color: "#666" }}>Total Dokumen</div>
-        </div>
-        <div style={{ padding: "20px 30px", background: "#fef3c7", borderRadius: "8px", boxShadow: "0 2px 4px rgba(0,0,0,0.1)", minWidth: "150px" }}>
-          <div style={{ fontSize: "28px", fontWeight: "bold", color: "#92400e" }}>{totalPending}</div>
-          <div style={{ color: "#92400e" }}>Menunggu</div>
-        </div>
-        <div style={{ padding: "20px 30px", background: "#d1fae5", borderRadius: "8px", boxShadow: "0 2px 4px rgba(0,0,0,0.1)", minWidth: "150px" }}>
-          <div style={{ fontSize: "28px", fontWeight: "bold", color: "#065f46" }}>{totalDisetujui}</div>
-          <div style={{ color: "#065f46" }}>Disetujui</div>
-        </div>
-        <div style={{ padding: "20px 30px", background: "#fee2e2", borderRadius: "8px", boxShadow: "0 2px 4px rgba(0,0,0,0.1)", minWidth: "150px" }}>
-          <div style={{ fontSize: "28px", fontWeight: "bold", color: "#991b1b" }}>{totalDitolak}</div>
-          <div style={{ color: "#991b1b" }}>Ditolak</div>
-        </div>
+      {/* Stats Grid */}
+      <div className="stats-grid">
+        <StatsCard
+          title="Total Dokumen"
+          value={totalDokumen}
+          colorClass="total"
+        />
+        <StatsCard
+          title="Menunggu Persetujuan"
+          value={totalPending}
+          colorClass="pending"
+        />
+        <StatsCard
+          title="Disetujui"
+          value={totalDisetujui}
+          colorClass="approved"
+        />
+        <StatsCard
+          title="Ditolak"
+          value={totalDitolak}
+          colorClass="rejected"
+        />
       </div>
 
       {/* Pending Documents */}
-      <div style={{ background: "#fff", borderRadius: "8px", boxShadow: "0 2px 4px rgba(0,0,0,0.1)", overflow: "hidden" }}>
-        <div style={{ background: "#3b82f6", color: "white", padding: "15px 20px", display: "flex", alignItems: "center", gap: "10px" }}>
+      <div className="recent-docs-container">
+        <div className="recent-docs-header">
           <HiClock size={20} />
-          <span style={{ fontWeight: "600" }}>Dokumen Menunggu Persetujuan</span>
+          <span className="recent-docs-title">Dokumen Menunggu Persetujuan</span>
         </div>
         
-        <div style={{ padding: "20px" }}>
+        <div className="recent-docs-body">
           {isLoading || isAuthLoading ? (
-            <div style={{ textAlign: "center", color: "#666", padding: "20px" }}>Memuat data...</div>
+            <div className="list-message loading">Memuat data...</div>
           ) : error ? (
-            <div style={{ textAlign: "center", color: "#dc2626", padding: "20px" }}>{error}</div>
+            <div className="list-message error">{error}</div>
           ) : pendingDocs.length === 0 ? (
-            <div style={{ textAlign: "center", color: "#666", padding: "20px" }}>
+            <div className="list-message empty">
               🎉 Tidak ada dokumen yang menunggu persetujuan.
             </div>
           ) : (
-            <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+            <ul className="recent-docs-list">
               {pendingDocs.map((doc) => (
-                <li key={doc._id} style={{ 
-                  display: "flex", 
-                  justifyContent: "space-between", 
-                  alignItems: "center",
-                  padding: "15px 0",
-                  borderBottom: "1px solid #e5e7eb"
-                }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    <HiDocumentText size={24} style={{ color: "#3b82f6" }} />
-                    <div>
-                      <div style={{ fontWeight: "600" }}>{doc.judul}</div>
-                      <div style={{ fontSize: "13px", color: "#666" }}>
+                <li key={doc._id} className="recent-doc-item">
+                  <div className="doc-info">
+                    <HiDocumentText size={24} className="doc-info-icon" />
+                    <div className="doc-info-text">
+                      <div className="doc-info-name">{doc.judul}</div>
+                      <div className="doc-info-meta">
                         {doc.karyawanId?.namaPengguna || "Unknown"} • {new Date(doc.tanggalUnggah).toLocaleDateString("id-ID")}
                       </div>
                     </div>
                   </div>
-                  <span style={{ 
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "5px",
-                    padding: "4px 12px", 
-                    background: "#fef3c7", 
-                    color: "#92400e",
-                    borderRadius: "20px",
-                    fontSize: "13px"
-                  }}>
-                    <HiClock size={14} />
+                  <span className="doc-status pending">
+                    <HiClock size={14} className="doc-status-icon" />
                     Menunggu
                   </span>
                 </li>
@@ -128,14 +150,8 @@ const AdminDashboard = () => {
           )}
         </div>
 
-        <div style={{ padding: "15px 20px", borderTop: "1px solid #e5e7eb", textAlign: "right" }}>
-          <Link to="/admin/kelola-dokumen" style={{ 
-            color: "#3b82f6", 
-            textDecoration: "none",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "5px"
-          }}>
+        <div className="recent-docs-footer">
+          <Link to="/admin/kelola-dokumen" className="recent-docs-footer-link">
             Kelola Semua Dokumen <HiArrowRight />
           </Link>
         </div>

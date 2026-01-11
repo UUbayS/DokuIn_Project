@@ -3,6 +3,7 @@
 
 import React, { useState } from "react";
 import axios from "axios";
+import "./KelolaKaryawan.css";
 import { HiUserAdd, HiCheckCircle, HiXCircle } from "react-icons/hi";
 
 const KelolaKaryawan = () => {
@@ -19,51 +20,70 @@ const KelolaKaryawan = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // Clear message when user starts typing
     setMessage({ type: "", text: "" });
+  };
+
+  const validateForm = () => {
+    if (!namaPengguna.trim()) {
+      setMessage({ type: "error", text: "Nama Pengguna wajib diisi!" });
+      return false;
+    }
+
+    if (!email.trim()) {
+      setMessage({ type: "error", text: "Email wajib diisi!" });
+      return false;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setMessage({ type: "error", text: "Format email tidak valid!" });
+      return false;
+    }
+
+    if (!kataSandi) {
+      setMessage({ type: "error", text: "Kata Sandi wajib diisi!" });
+      return false;
+    }
+
+    if (kataSandi.length < 6) {
+      setMessage({ type: "error", text: "Password minimal 6 karakter!" });
+      return false;
+    }
+
+    if (kataSandi !== konfirmasiSandi) {
+      setMessage({ type: "error", text: "Konfirmasi password tidak cocok!" });
+      return false;
+    }
+
+    return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage({ type: "", text: "" });
 
-    // Validasi
-    if (!namaPengguna) {
-      setMessage({ type: "error", text: "Nama Pengguna wajib diisi!" });
-      return;
-    }
-
-    if (!email) {
-      setMessage({ type: "error", text: "Email wajib diisi!" });
-      return;
-    }
-
-    if (!kataSandi) {
-      setMessage({ type: "error", text: "Kata Sandi wajib diisi!" });
-      return;
-    }
-
-    if (kataSandi.length < 6) {
-      setMessage({ type: "error", text: "Password minimal 6 karakter!" });
-      return;
-    }
-
-    if (kataSandi !== konfirmasiSandi) {
-      setMessage({ type: "error", text: "Konfirmasi password tidak cocok!" });
+    // Validate form
+    if (!validateForm()) {
       return;
     }
 
     setIsLoading(true);
 
     try {
-      // axios sudah punya default header x-auth-token dari AuthContext
-      await axios.post("/api/auth/register", { namaPengguna, email, kataSandi });
+      await axios.post("/api/auth/register", { 
+        namaPengguna: namaPengguna.trim(), 
+        email: email.trim(), 
+        kataSandi 
+      });
 
       setMessage({
         type: "success",
         text: `Karyawan "${namaPengguna}" berhasil didaftarkan!`,
       });
 
-      // Reset form
+      // Reset form after successful registration
       setFormData({
         namaPengguna: "",
         email: "",
@@ -79,56 +99,35 @@ const KelolaKaryawan = () => {
     }
   };
 
-  const inputStyle = {
-    width: "100%",
-    padding: "12px",
-    border: "1px solid #e5e7eb",
-    borderRadius: "8px",
-    fontSize: "14px",
-    boxSizing: "border-box"
-  };
-
-  const labelStyle = {
-    display: "block",
-    marginBottom: "6px",
-    fontWeight: "600",
-    color: "#374151"
-  };
-
   return (
-    <div style={{ padding: "20px" }}>
-      <h1 style={{ marginBottom: "20px", display: "flex", alignItems: "center", gap: "10px" }}>
+    <div className="kelola-karyawan-container">
+      {/* Page Header */}
+      <h1 className="page-header">
         <HiUserAdd size={28} />
         Daftarkan Karyawan Baru
       </h1>
 
-      <div style={{ 
-        background: "#fff", 
-        borderRadius: "12px", 
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)", 
-        padding: "30px",
-        maxWidth: "500px"
-      }}>
+      {/* Form Card */}
+      <div className="form-card">
+        {/* Message Alert */}
         {message.text && (
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            padding: "12px 16px",
-            borderRadius: "8px",
-            marginBottom: "20px",
-            background: message.type === "success" ? "#d1fae5" : "#fee2e2",
-            color: message.type === "success" ? "#065f46" : "#991b1b",
-            border: `1px solid ${message.type === "success" ? "#a7f0c9" : "#f5c6c6"}`
-          }}>
-            {message.type === "success" ? <HiCheckCircle size={20} /> : <HiXCircle size={20} />}
+          <div className={`message-alert ${message.type}`}>
+            {message.type === "success" ? (
+              <HiCheckCircle size={20} />
+            ) : (
+              <HiXCircle size={20} />
+            )}
             <span>{message.text}</span>
           </div>
         )}
 
+        {/* Registration Form */}
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: "20px" }}>
-            <label style={labelStyle} htmlFor="namaPengguna">Nama Pengguna</label>
+          {/* Nama Pengguna */}
+          <div className="form-group">
+            <label className="form-label" htmlFor="namaPengguna">
+              Nama Pengguna
+            </label>
             <input
               type="text"
               id="namaPengguna"
@@ -137,12 +136,16 @@ const KelolaKaryawan = () => {
               onChange={handleChange}
               placeholder="Masukkan nama pengguna"
               disabled={isLoading}
-              style={inputStyle}
+              className="form-input"
+              autoComplete="name"
             />
           </div>
 
-          <div style={{ marginBottom: "20px" }}>
-            <label style={labelStyle} htmlFor="email">Email</label>
+          {/* Email */}
+          <div className="form-group">
+            <label className="form-label" htmlFor="email">
+              Email
+            </label>
             <input
               type="email"
               id="email"
@@ -151,12 +154,16 @@ const KelolaKaryawan = () => {
               onChange={handleChange}
               placeholder="Masukkan email karyawan"
               disabled={isLoading}
-              style={inputStyle}
+              className="form-input"
+              autoComplete="email"
             />
           </div>
 
-          <div style={{ marginBottom: "20px" }}>
-            <label style={labelStyle} htmlFor="kataSandi">Password</label>
+          {/* Password */}
+          <div className="form-group">
+            <label className="form-label" htmlFor="kataSandi">
+              Password
+            </label>
             <input
               type="password"
               id="kataSandi"
@@ -165,12 +172,16 @@ const KelolaKaryawan = () => {
               onChange={handleChange}
               placeholder="Minimal 6 karakter"
               disabled={isLoading}
-              style={inputStyle}
+              className="form-input"
+              autoComplete="new-password"
             />
           </div>
 
-          <div style={{ marginBottom: "20px" }}>
-            <label style={labelStyle} htmlFor="konfirmasiSandi">Konfirmasi Password</label>
+          {/* Konfirmasi Password */}
+          <div className="form-group">
+            <label className="form-label" htmlFor="konfirmasiSandi">
+              Konfirmasi Password
+            </label>
             <input
               type="password"
               id="konfirmasiSandi"
@@ -179,24 +190,16 @@ const KelolaKaryawan = () => {
               onChange={handleChange}
               placeholder="Ulangi password"
               disabled={isLoading}
-              style={inputStyle}
+              className="form-input"
+              autoComplete="new-password"
             />
           </div>
 
+          {/* Submit Button */}
           <button 
             type="submit" 
             disabled={isLoading}
-            style={{
-              width: "100%",
-              padding: "14px",
-              background: isLoading ? "#9ca3af" : "linear-gradient(135deg, #3b82f6, #1d4ed8)",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              fontSize: "16px",
-              fontWeight: "600",
-              cursor: isLoading ? "not-allowed" : "pointer"
-            }}
+            className="submit-button"
           >
             {isLoading ? "Mendaftarkan..." : "Daftarkan Karyawan"}
           </button>

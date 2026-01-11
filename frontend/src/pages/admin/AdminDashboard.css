@@ -1,11 +1,16 @@
-
 /* === HALAMAN DASHBOARD ADMIN (AdminDashboard.jsx) === */
 
-.main-content-title {
+/* Page Container */
+.admin-dashboard-container {
+  padding: 20px;
+}
+
+/* Page Header */
+.admin-dashboard-header {
+  margin-bottom: 20px;
   font-size: 1.75rem;
   font-weight: 600;
   color: var(--dark-color);
-  margin: 0 0 1.5rem 0;
 }
 
 /* == Grid Statistik == */
@@ -16,34 +21,102 @@
   margin-bottom: 2rem;
 }
 
+.stat-card {
+  padding: 20px 30px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-card.total {
+  background: #fff;
+}
+
+.stat-card.pending {
+  background: #fef3c7;
+}
+
+.stat-card.approved {
+  background: #d1fae5;
+}
+
+.stat-card.rejected {
+  background: #fee2e2;
+}
+
+.stat-number {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.stat-card.total .stat-number {
+  color: #1f2937;
+}
+
+.stat-card.pending .stat-number {
+  color: #92400e;
+}
+
+.stat-card.approved .stat-number {
+  color: #065f46;
+}
+
+.stat-card.rejected .stat-number {
+  color: #991b1b;
+}
+
+.stat-label {
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.stat-card.total .stat-label {
+  color: #666;
+}
+
+.stat-card.pending .stat-label {
+  color: #92400e;
+}
+
+.stat-card.approved .stat-label {
+  color: #065f46;
+}
+
+.stat-card.rejected .stat-label {
+  color: #991b1b;
+}
+
 /* == Dokumen Terbaru == */
 .recent-docs-container {
   background: #ffffff;
   border-radius: 8px;
-  box-shadow: var(--card-shadow);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
 .recent-docs-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.5rem;
-  background-color: var(--primary-color); 
+  gap: 10px;
+  padding: 15px 20px;
+  background-color: #3b82f6;
   color: white;
 }
 
 .recent-docs-title {
-  font-size: 1.1rem;
   font-weight: 600;
+  font-size: 1rem;
 }
 
-.recent-docs-status-header {
-  font-size: 0.9rem;
-  font-weight: 500;
+.recent-docs-body {
+  padding: 10px 20px;
 }
 
-.recent-docs-list ul {
+.recent-docs-list {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -53,8 +126,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 10px 5px;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .recent-doc-item:last-child {
@@ -64,55 +137,78 @@
 .doc-info {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  flex-grow: 1;
+  flex-direction: row!important;
+  gap: 5px;
 }
 
 .doc-info-icon {
-  color: var(--text-muted);
+  color: #3b82f6;
+  flex-shrink: 0;
+}
+
+.doc-info-text {
+  display: flex;
+  flex-direction: column;
 }
 
 .doc-info-name {
   font-weight: 600;
-  color: var(--dark-color);
+  color: #1f2937;
 }
 
-.doc-info-date {
-  font-size: 0.875rem;
-  color: var(--text-muted);
+.doc-info-meta {
+  font-size: 13px;
+  color: #666;
+  margin-top: 2px;
 }
 
 /* == Status Styling == */
 .doc-status {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-weight: 500;
+  gap: 5px;
+  padding: 4px 12px;
   border-radius: 20px;
-  padding: 0.25rem 0.75rem;
-  font-size: 0.9rem;
-  min-width: 90px;
-  justify-content: center;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.doc-status.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.doc-status.approved {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.doc-status.rejected {
+  background: #fee2e2;
+  color: #991b1b;
 }
 
 .doc-status-icon {
   display: flex;
   align-items: center;
-  font-size: 1.1rem;
 }
 
+/* Legacy status classes (for backward compatibility) */
 .status-green {
   background-color: #e6f7f0;
   color: var(--success-color);
 }
+
 .status-red {
   background-color: #fdeeee;
   color: var(--danger-color);
 }
+
 .status-yellow {
   background-color: #fef8e7;
   color: var(--warning-color);
 }
+
 .status-gray {
   background-color: #f0f0f0;
   color: #666;
@@ -120,25 +216,72 @@
 
 /* == Footer List == */
 .recent-docs-footer {
-  padding: 1rem 1.5rem;
+  padding: 15px 20px;
+  border-top: 1px solid #e5e7eb;
   text-align: right;
-  background-color: #fdfdfd;
-  border-top: 1px solid #f0f0f0;
 }
 
-.recent-docs-footer a:hover {
+.recent-docs-footer-link {
+  color: #3b82f6;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.recent-docs-footer-link:hover {
+  opacity: 0.8;
   text-decoration: underline;
 }
 
 /* == Pesan Loading/Error == */
 .list-message {
-  padding: 3rem;
+  padding: 20px;
   text-align: center;
-  color: var(--text-muted);
   font-style: italic;
 }
 
+.list-message.loading {
+  color: #666;
+}
+
 .list-message.error {
-  color: var(--danger-color);
+  color: #dc2626;
   font-weight: 600;
+}
+
+.list-message.empty {
+  color: #666;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-dashboard-container {
+    padding: 15px;
+  }
+
+  .stats-grid {
+    justify-content: center;
+  }
+
+  .stat-card {
+    min-width: 120px;
+    padding: 15px 20px;
+  }
+
+  .stat-number {
+    font-size: 24px;
+  }
+
+  .recent-doc-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .doc-status {
+    align-self: flex-start;
+  }
 }
