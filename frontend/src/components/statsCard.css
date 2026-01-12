@@ -1,23 +1,75 @@
 /* == Style untuk StatsCard (StatsCard.jsx) == */
 
-.stats-card {
-  padding: 1.5rem;
+.stat-item {
+  padding: 15px 25px;
+  background: #ffffff;
   border-radius: 8px;
-  box-shadow: var(--card-shadow);
-  color: var(--dark-color);
-}
-.stats-card .card-title {
-  font-size: 1rem;
-  color: #555;
-  margin-bottom: 0.5rem;
-}
-.stats-card .card-value {
-  font-size: 2.25rem;
-  font-weight: 700;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  min-width: 100px;
+  align-items: center;
 }
 
-.card-white { background-color: #fff; }
-.card-green { background-color: #d1fae5; color: #065f46; }
-.card-yellow { background-color: #fef3c7; color: #92400e; }
-.card-red { background-color: #fee2e2; color: #991b1b; }
+.stat-item.total {
+  border-left: 4px solid #3b82f6;
+}
+
+.stat-item.pending {
+  background: #fef3c7;
+  border-left: 4px solid #f59e0b;
+}
+
+.stat-item.approved {
+  background: #d1fae5;
+  border-left: 4px solid #10b981;
+}
+
+.stat-item.rejected {
+  background: #fee2e2;
+  border-left: 4px solid #ef4444;
+}
+
+.stat-number {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.stat-item.total .stat-number {
+  color: #1f2937;
+}
+
+.stat-item.pending .stat-number {
+  color: #92400e;
+}
+
+.stat-item.approved .stat-number {
+  color: #065f46;
+}
+
+.stat-item.rejected .stat-number {
+  color: #991b1b;
+}
+
+.stat-label {
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.stat-item.total .stat-label {
+  color: #666;
+}
+
+.stat-item.pending .stat-label {
+  color: #92400e;
+}
+
+.stat-item.approved .stat-label {
+  color: #065f46;
+}
+
+.stat-item.rejected .stat-label {
+  color: #991b1b;
+}
+
 

@@ -13,6 +13,18 @@ import { useAuth } from '../context/AuthContext';
 
 const AdminSidebar = () => {
   const { user } = useAuth();
+
+  const isSuperAdmin = user?.role === 'Administrator'; 
+
+  const formatRole = (role) => {
+    switch(role) {
+      case 'Administrator': return 'Super Admin';
+      case 'hrd': return 'HRD';
+      case 'operational_manager': return 'Operational Manager';
+      default: return 'Administrator';
+    }
+  };
+
   return (
     <div className="sidebar"> 
       <div className="sidebar-profile">
@@ -20,7 +32,9 @@ const AdminSidebar = () => {
         <div className="sidebar-profile-name">
           {user ? user.namaPengguna : "Admin"}
         </div>
-        <div className="sidebar-profile-role">Administrator</div>
+        <div className="sidebar-profile-role">
+          {user ? formatRole(user.role) : "Guest"}
+        </div>
       </div>
       
       <nav className="sidebar-nav">
@@ -37,12 +51,14 @@ const AdminSidebar = () => {
               <span>Kelola Dokumen</span>
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/admin/kelola-karyawan" className="sidebar-nav-item">
-              <HiUserAdd size={20} />
-              <span>Kelola Karyawan</span>
-            </NavLink>
-          </li>
+          {isSuperAdmin && (
+            <li>
+              <NavLink to="/admin/kelola-karyawan" className="sidebar-nav-item">
+                <HiUserAdd size={20} />
+                <span>Kelola Karyawan</span>
+              </NavLink>
+            </li>
+          )}
         </ul>
       </nav>
     </div>

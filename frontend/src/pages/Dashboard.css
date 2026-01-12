@@ -1,30 +1,35 @@
 
 /* === HALAMAN DASHBOARD (Dashboard.jsx) === */
+/* Page Container */
+.main-content-container {
+  padding: 20px;
+}
 
-.main-content-title {
+.main-content-header {
+  margin-bottom: 20px;
   font-size: 1.75rem;
   font-weight: 600;
   color: var(--dark-color);
-  margin: 0 0 1.5rem 0;
 }
 
 /* == Grid Statistik == */
 .stats-grid {
   display: grid;
+  padding: 10px 0;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 5rem;
 }
 
 /* == Dokumen Terbaru == */
-.recent-docs-container {
+.main-docs-container {
   background: #ffffff;
   border-radius: 8px;
   box-shadow: var(--card-shadow);
   overflow: hidden;
 }
 
-.recent-docs-header {
+.main-docs-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -33,83 +38,80 @@
   color: white;
 }
 
-.recent-docs-title {
+.main-docs-title {
   font-size: 1.1rem;
   font-weight: 600;
 }
 
-.recent-docs-status-header {
-  font-size: 0.9rem;
-  font-weight: 500;
+.main-docs-status-header {
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
-.recent-docs-list ul {
+.main-docs-list ul {
   list-style: none;
-  padding: 0;
+  padding: 0 20px 0 20px;
   margin: 0;
 }
 
-.recent-doc-item {
+.main-doc-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.25rem 1.5rem;
+  padding: 1.25rem 0;
   border-bottom: 1px solid #f0f0f0;
   
 }
 
-.recent-doc-item:last-child {
+.main-doc-item:last-child {
   border-bottom: none;
 }
 
-/* === BAGIAN KIRI: ICON DAN TEKS (PERBAIKAN UTAMA) === */
-.doc-info {
-  display: flex !important;       /* Paksa menjadi baris */
-  flex-direction: row !important; /* Paksa ke samping */
-  align-items: center;            /* Tengah secara vertikal */
-  gap: 16px;                      /* Jarak antara Icon dan Teks */
+/* === BAGIAN KIRI: ICON DAN TEKS === */
+.main-doc-info {
+  display: flex !important;      
+  flex-direction: row !important; 
+  align-items: center;            
+  gap: 16px;                      
 }
 
-.doc-info-icon {
-  flex-shrink: 0;                 /* Agar icon tidak tergencet */
+.main-doc-info-icon {
+  flex-shrink: 0;                
   color: #6b7280;
 }
 
 /* Wrapper untuk Nama & Tanggal */
-.doc-info > div {
+.main-doc-info > div {
   display: flex;
-  flex-direction: column;         /* Nama di atas, Tanggal di bawah */
+  flex-direction: column;
   gap: 4px;
   text-align: left;
 }
 
-.doc-info-name {
+.main-doc-info-name {
   font-size: 15px;
   font-weight: 600;
   color: #111827;
   line-height: 1.2;
 }
 
-.doc-info-date {
+.main-doc-info-date {
   font-size: 13px;
   color: #9ca3af;
 }
 
 /* == Status Styling == */
-.doc-status {
+.main-doc-status {
   display: inline-flex;
-  align-items: center;   
-  justify-content: center;
-  gap: 6px;              
-  padding: 4px 12px;    
-  border-radius: 99px;   
-  font-size: 12px;      
-  font-weight: 600;     
-  line-height: 1;       
-  white-space: nowrap;  
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;  
 }
 
-.doc-status-icon {
+.main-doc-status-icon {
   display: flex;         
   align-items: center;
   font-size: 14px;       
@@ -136,14 +138,14 @@
 }
 
 /* == Footer List == */
-.recent-docs-footer {
+.main-docs-footer {
   padding: 1rem 1.5rem;
   text-align: right;
   background-color: #fdfdfd;
   border-top: 1px solid #f0f0f0;
 }
 
-.recent-docs-footer a:hover {
+.main-docs-footer a:hover {
   text-decoration: underline;
 }
 

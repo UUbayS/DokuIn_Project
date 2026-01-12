@@ -1,0 +1,417 @@
+/* =========================================
+   MAIN LAYOUT & CONTAINERS
+   ========================================= */
+
+/* Support untuk kedua jenis container halaman */
+.kelola-dokumen-container,
+.dokumen-list-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Header Halaman */
+.page-header {
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 24px;
+  color: #111827;
+  font-weight: 700;
+}
+
+/* =========================================
+   FILTER & SEARCH SECTION
+   ========================================= */
+
+.filter-section {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+/* Search Box */
+.search-box {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 250px;
+  transition: all 0.2s ease;
+}
+
+.search-box:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  color: #1f2937;
+  background: transparent;
+}
+
+.search-icon, 
+.filter-icon {
+  color: #9ca3af;
+  font-size: 20px;
+}
+
+/* Filter Dropdown */
+.filter-box {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 200px;
+}
+
+.filter-box select {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  color: #1f2937;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* =========================================
+   TABLE STYLES
+   ========================================= */
+
+/* Container Table dengan Scroll */
+.dokumen-table-container {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-height: 600px; /* Sedikit diperbesar agar lebih lega */
+  overflow: auto;
+  border: 1px solid #e5e7eb;
+}
+
+.dokumen-table {
+  width: 100%;
+  border-collapse: separate; /* Diubah ke separate untuk sticky header yang lebih baik */
+  border-spacing: 0;
+  min-width: 1000px;
+}
+
+/* Pengaturan Lebar Kolom Spesifik */
+.dokumen-table th:first-child,
+.dokumen-table td:first-child {
+  width: auto; 
+}
+
+/* Kolom aksi dan status dibuat fit-content */
+.dokumen-table th:nth-child(4),
+.dokumen-table td:nth-child(4),
+.dokumen-table th:last-child,
+.dokumen-table td:last-child {
+  width: 1%;            
+  white-space: nowrap;  
+}
+
+/* Header Table Sticky */
+.dokumen-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--primary-color);
+}
+
+.dokumen-table th {
+  background: var(--primary-color); 
+  color: white;
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  border-bottom: 2px solid #2563eb;
+  position: sticky; /* Memastikan th tetap sticky */
+  top: 0;
+}
+
+.dokumen-table th.center {
+  text-align: center;
+}
+
+/* Table Body */
+.dokumen-table td {
+  padding: 14px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: middle;
+  background-color: #fff; /* Penting untuk sticky columns jika ada */
+  font-size: 14px;
+}
+
+.dokumen-table th.center,
+.dokumen-table td.center {
+  text-align: center !important; /* Force rata tengah secara horizontal */
+  vertical-align: middle !important; /* Force rata tengah secara vertikal */
+}
+
+.dokumen-table th.col-status,
+.dokumen-table td.col-status {
+  width: 160px;
+  min-width: 160px;
+  max-width: 160px;
+  text-align: center !important;
+  vertical-align: middle;
+}
+
+.dokumen-table th.col-aksi,
+.dokumen-table td.col-aksi {
+  width: 120px;
+  min-width: 120px;
+  text-align: center !important;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.dokumen-table tbody tr:hover td {
+  background-color: #f9fafb;
+}
+
+.dokumen-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Cell Content */
+
+/* Document Info Cell (Icon + Title + Badge) */
+.dokumen-cell {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.dokumen-cell-icon {
+  color: #3b82f6;
+  font-size: 24px; /* Ukuran icon diperjelas */
+  flex-shrink: 0;
+}
+
+.dokumen-info {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
+}
+
+.dokumen-title {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.dokumen-type-badge {
+  font-size: 11px;
+  display: inline-block;
+  background: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+}
+
+/* Karyawan / User Cell */
+.karyawan-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #4b5563;
+  font-weight: 500;
+}
+
+/* Date Cell */
+.date-cell {
+  color: #6b7280;
+  font-feature-settings: "tnum"; /* Tabular numbers untuk alignment angka */
+}
+
+/* Status Badge */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 9999px; /* Pill shape sempurna */
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-badge.status-disetujui,
+.status-badge.approved {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.status-badge.status-ditolak,
+.status-badge.rejected {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.status-badge.status-pending {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.status-badge.status-default {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+}
+
+/* Action Button */
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.btn-action {
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.btn-action:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(0.95);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.btn-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(1);
+}
+
+/* Variant Warna Tombol */
+.btn-action.approve {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.btn-action.reject {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.btn-action.view {
+  background: #f3e8ff;
+  color: #7c3aed;
+  text-decoration: none;
+}
+
+.btn-action.download {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.btn-action.edit {
+  background: #ffedd5;
+  color: #9a3412;
+}
+
+.btn-action.delete {
+  background: #ffe4e6;
+  color: #e11d48;
+}
+
+/* States */
+
+.loading-message,
+.error-message,
+.empty-message,
+.empty-row {
+  text-align: center; 
+  vertical-align: middle; 
+  padding: 40px;      
+  color: #9ca3af;   
+  font-style: italic;
+  background-color: #fff;
+}
+
+.loading-message { color: #6b7280; }
+.error-message { color: #dc2626; }
+.empty-message, .empty-row { 
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* Responsive*/
+
+@media (max-width: 768px) {
+  .kelola-dokumen-container,
+  .dokumen-list-container {
+    padding: 16px;
+  }
+
+  /* Stack filter section vertically */
+  .filter-section {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .search-box,
+  .filter-box {
+    min-width: 100%;
+    width: 100%;
+  }
+
+  /* Table responsive handling */
+  .dokumen-table-container {
+    box-shadow: none;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .dokumen-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  /* Adjust cell content for mobile */
+  .doc-cell {
+    min-width: 200px;
+  }
+  
+  .action-buttons {
+    justify-content: flex-start;
+  }
+}

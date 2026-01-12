@@ -175,7 +175,7 @@
   }
 }
 
-/* --- COMMENT STYLES (Biarkan tetap seperti sebelumnya) --- */
+/* --- COMMENT STYLES --- */
 .comment-form { margin-bottom: 24px; }
 .comment-input-wrapper { display: flex; gap: 16px; }
 .comment-avatar { color: #9ca3af; flex-shrink: 0; }

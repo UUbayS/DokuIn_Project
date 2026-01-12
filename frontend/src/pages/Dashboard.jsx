@@ -3,11 +3,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-import StatsCard from "../components/statsCard";
+import StatsCard from "../components/statscard";
 import "./Dashboard.css"
 
 import { getStatusConfig } from "../utils/statusHelper";
-import { formatDate } from "../utils/dateHelper";
 
 import {
   HiDocumentText
@@ -52,41 +51,39 @@ const Dashboard = () => {
 
   const dokumenTerbaru = dokumenList.slice(0, 3);
 
-
-
   return (
-    <>
-      <h1 className="main-content-title">Selamat Datang, {user ? user.namaPengguna : "Username"}!</h1>
+    <div className="main-content-container">
+      <h1 className="main-content-header">Selamat Datang, {user ? user.namaPengguna : "Username"}!</h1>
 
       <div className="stats-grid">
         <StatsCard
-          title="Total Dokumen:"
+          title="Total Dokumen"
           value={totalDokumen}
-          colorClass="card-white"
+          colorClass="total"
         />
         <StatsCard
           title="Disetujui"
           value={totalDisetujui}
-          colorClass="card-green"
+          colorClass="approved"
         />
         <StatsCard
           title="Menunggu Persetujuan"
           value={totalPending}
-          colorClass="card-yellow"
+          colorClass="pending"
         />
         <StatsCard
           title="Ditolak"
           value={totalDitolak}
-          colorClass="card-red"
+          colorClass="rejected"
         />
       </div>
 
-      <div className="recent-docs-container">
-        <div className="recent-docs-header">
-          <span className="recent-docs-title">Dokumen Terbaru</span>
-          <span className="recent-docs-status-header">Status</span>
+      <div className="main-docs-container">
+        <div className="main-docs-header">
+          <span className="main-docs-title">Dokumen Terbaru</span>
+          <span className="main-docs-status-header">Status</span>
         </div>
-        <div className="recent-docs-list">
+        <div className="main-docs-list">
           {isLoading || isAuthLoading ? (
             <div className="list-message">Memuat data...</div>
           ) : error ? (
@@ -98,23 +95,23 @@ const Dashboard = () => {
               {dokumenTerbaru.map((doc) => {
                 const statusProps = getStatusConfig(doc.status);
                 return (
-                  <li key={doc._id} className="recent-doc-item">
-                    <div className="doc-info">
-                      <HiDocumentText size={24} className="doc-info-icon" />
+                  <li key={doc._id} className="main-doc-item">
+                    <div className="main-doc-info">
+                      <HiDocumentText size={24} className="main-doc-info-icon" />
                       <div>
-                        <div className="doc-info-name">
+                        <div className="main-doc-info-name">
                           {doc.judul || doc.namaFile || "Nama Dokumen"}
                         </div>
-                        <div className="doc-info-date">
+                        <div className="main-doc-info-date">
                           {new Date(
                             doc.tanggalUnggah
                           ).toLocaleDateString("id-ID")}
                         </div>
                       </div>
                     </div>
-                    <div className={`doc-status ${statusProps.colorClass}`}>
+                    <div className={`main-doc-status ${statusProps.colorClass}`}>
                       <span>{doc.status}</span>
-                      <span className="doc-status-icon">
+                      <span className="main-doc-status-icon">
                         {statusProps.icon}
                       </span>
                     </div>
@@ -124,11 +121,11 @@ const Dashboard = () => {
             </ul>
           )}
         </div>
-        <div className="recent-docs-footer">
+        <div className="main-docs-footer">
           <a href="/riwayat-dokumen">Tampilkan Semua &rarr;</a>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
