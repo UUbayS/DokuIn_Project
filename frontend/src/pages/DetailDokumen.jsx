@@ -38,8 +38,11 @@ const DetailDokumen = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [commentError, setCommentError] = useState("");
 
-  // Cek apakah user bisa comment (admin atau pemilik dokumen)
-  const canComment = user?.role === "Administrator" || 
+  // Manager roles yang bisa komentar di semua dokumen
+  const MANAGER_ROLES = ["Super Admin", "HRD", "Operasional Manajer"];
+  
+  // Cek apakah user bisa comment (manager roles atau pemilik dokumen)
+  const canComment = MANAGER_ROLES.includes(user?.role) || 
     (dokumen && dokumen.karyawanId === user?.id);
 
   // Ubah parameter agar menerima docTitle
@@ -151,7 +154,8 @@ const fetchFilePreview = async (docId, docTitle) => {
 
   useEffect(() => {
     fetchDetailDokumen();
-    if (user?.role === "Administrator" && !location.pathname.startsWith("/admin")) {
+    const managerRoles = ["Super Admin", "HRD", "Operasional Manajer"];
+    if (managerRoles.includes(user?.role) && !location.pathname.startsWith("/admin")) {
       // Lempar ke URL Admin
       navigate(`/admin/dokumen/${id}`);
     }
@@ -292,8 +296,9 @@ const fetchFilePreview = async (docId, docTitle) => {
         ) : (
           komentar.map((kom) => {
             const isOwner = kom.userId?._id === user?.id;
-            const isAdmin = user?.role === "Administrator";
-            const canDelete = isOwner || isAdmin;
+            const managerRoles = ["Super Admin", "HRD", "Operasional Manajer"];
+            const isManager = managerRoles.includes(user?.role);
+            const canDelete = isOwner || isManager;
 
             return (
               <div className="comment-item" key={kom._id}>
@@ -304,7 +309,7 @@ const fetchFilePreview = async (docId, docTitle) => {
                       <span className="comment-user-name">
                         {kom.userId?.namaPengguna || "Unknown"}
                       </span>
-                      <span className={`comment-user-role ${kom.userId?.role === "Administrator" ? "role-admin" : "role-karyawan"}`}>
+                      <span className={`comment-user-role ${["Super Admin", "HRD", "Operasional Manajer"].includes(kom.userId?.role) ? "role-admin" : "role-karyawan"}`}>
                         {kom.userId?.role || "Karyawan"}
                       </span>
                     </div>

@@ -16,7 +16,8 @@ const DokumenSchema = new mongoose.Schema({
   },
   jenisDokumen: {
     type: String,
-    enum: ['Pribadi', 'Proposal', 'Surat', 'Laporan', 'Lainnya'],
+    // HRD: Pribadi & Surat Ijin | Operasional Manajer: Laporan & Proposal
+    enum: ['Pribadi', 'Proposal', 'Surat Ijin', 'Laporan'],
     required: true,
   },
   status: {

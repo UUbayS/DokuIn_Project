@@ -11,7 +11,8 @@ const ProfileDropdown = ({ onLogout, onClose }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   
-  const isAdmin = user?.role === "Administrator";
+  const managerRoles = ["Super Admin", "HRD", "Operasional Manajer"];
+  const isManager = managerRoles.includes(user?.role);
   const viewAsKaryawan = localStorage.getItem("viewAsKaryawan") === "true";
 
   useEffect(() => {
@@ -50,8 +51,8 @@ const ProfileDropdown = ({ onLogout, onClose }) => {
         </span>
       </div>
       <div className="dropdown-content">
-        {/* Switch options for Admin only */}
-        {isAdmin && (
+        {/* Switch options for Manager roles only */}
+        {isManager && (
           <>
             {viewAsKaryawan ? (
               <button onClick={handleSwitchToAdmin} className="dropdown-item">

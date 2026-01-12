@@ -24,7 +24,7 @@ import {
 } from "react-icons/hi";
 
 const KelolaDokumen = () => {
-  const { isAuthLoading } = useAuth();
+  const { isAuthLoading, user } = useAuth();
   const [dokumenList, setDokumenList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -36,8 +36,8 @@ const KelolaDokumen = () => {
   const fetchAllDokumen = async () => {
     setIsLoading(true);
     try {
-      // axios sudah punya default header x-auth-token dari AuthContext
-      const res = await axios.get("/api/dokumen/admin/all");
+      // Gunakan endpoint manager yang bisa diakses oleh Super Admin, HRD, dan Op. Manajer
+      const res = await axios.get("/api/dokumen/manager/all");
       setDokumenList(res.data);
       setError("");
     } catch (err) {
@@ -61,7 +61,8 @@ const KelolaDokumen = () => {
   const handleUpdateStatus = async (docId, newStatus) => {
     setActionLoading(docId);
     try {
-      await axios.put(`/api/dokumen/admin/status/${docId}`, { status: newStatus });
+      // Gunakan endpoint manager yang bisa diakses oleh semua manager roles
+      await axios.put(`/api/dokumen/manager/status/${docId}`, { status: newStatus });
 
       // Update local state
       setDokumenList((prev) =>
@@ -154,9 +155,8 @@ const KelolaDokumen = () => {
             <option value="Semua">Semua Jenis</option>
             <option value="Pribadi">Pribadi</option>
             <option value="Proposal">Proposal</option>
-            <option value="Surat">Surat Izin</option>
+            <option value="Surat Ijin">Surat Ijin</option>
             <option value="Laporan">Laporan</option>
-            <option value="Lainnya">Lainnya</option> 
           </select>
         </div>
       </div>
@@ -239,6 +239,7 @@ const KelolaDokumen = () => {
                     </td>
                     <td style={{ padding: "12px 16px" }}>
                       <div style={{ display: "flex", gap: "8px", justifyContent: "center" }}>
+                        {/* Tombol Approve/Reject untuk semua Manager roles */}
                         {isPending && (
                           <>
                             <button

@@ -151,9 +151,8 @@ const UploadForm = () => {
                 <option value="" disabled>Pilih Jenis Dokumen</option>
                 <option value="Pribadi">Pribadi</option>
                 <option value="Proposal">Proposal</option>
-                <option value="Surat">Surat Izin</option>
+                <option value="Surat Ijin">Surat Ijin</option>
                 <option value="Laporan">Laporan</option>
-                <option value="Lainnya">Lainnya</option>
               </select>
             </div>
             

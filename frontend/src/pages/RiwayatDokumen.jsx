@@ -107,9 +107,8 @@ const RiwayatDokumen = () => {
             <option value="Semua">Semua Jenis</option>
             <option value="Pribadi">Pribadi</option>
             <option value="Proposal">Proposal</option>
-            <option value="Surat">Surat Izin</option>
+            <option value="Surat Ijin">Surat Ijin</option>
             <option value="Laporan">Laporan</option>
-            <option value="Lainnya">Lainnya</option> 
           </select>
         </div>
       </div>
@@ -136,7 +135,8 @@ const RiwayatDokumen = () => {
               filteredList.map((doc) => {
                 const statusConfig = getStatusConfig(doc.status);
 
-                const detailPath = user?.role === 'Administrator'
+                const managerRoles = ['Super Admin', 'HRD', 'Operasional Manajer'];
+                const detailPath = managerRoles.includes(user?.role)
                   ? `/admin/dokumen/${doc._id}` 
                   : `/dokumen/${doc._id}`;
 

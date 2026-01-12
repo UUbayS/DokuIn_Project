@@ -25,15 +25,41 @@ exports.uploadDokumen = async (req, res) => {
 
     const dokumen = await newDokumen.save();
 
-    // [NEW] Notifikasi ke semua Admin
-    const admins = await User.find({ role: "Administrator" });
-    for (const admin of admins) {
+    // Notifikasi ke Super Admin (selalu)
+    const superAdmins = await User.find({ role: "Super Admin" });
+    for (const admin of superAdmins) {
       await createNotification(
         admin._id,
-        `Dokumen baru "${judul}" menunggu persetujuan.`,
+        `Dokumen baru "${judul}" (${jenisDokumen}) menunggu persetujuan.`,
         "NEW_DOCUMENT",
         dokumen._id
       );
+    }
+
+    // Notifikasi ke HRD untuk dokumen Pribadi & Surat Ijin
+    if (["Pribadi", "Surat Ijin"].includes(jenisDokumen)) {
+      const hrdUsers = await User.find({ role: "HRD" });
+      for (const hrd of hrdUsers) {
+        await createNotification(
+          hrd._id,
+          `Dokumen baru "${judul}" (${jenisDokumen}) menunggu persetujuan.`,
+          "NEW_DOCUMENT",
+          dokumen._id
+        );
+      }
+    }
+
+    // Notifikasi ke Operasional Manajer untuk dokumen Laporan & Proposal
+    if (["Laporan", "Proposal"].includes(jenisDokumen)) {
+      const opManagers = await User.find({ role: "Operasional Manajer" });
+      for (const manager of opManagers) {
+        await createNotification(
+          manager._id,
+          `Dokumen baru "${judul}" (${jenisDokumen}) menunggu persetujuan.`,
+          "NEW_DOCUMENT",
+          dokumen._id
+        );
+      }
     }
 
     res.status(201).json({ msg: "Dokumen berhasil di-upload", dokumen });
@@ -170,6 +196,99 @@ exports.updateStatusDokumen = async (req, res) => {
     await createNotification(
       dokumen.karyawanId._id, // Karena sudah dipopulate
       `Dokumen Anda "${dokumen.judul}" telah ${status}.`,
+      status === "Disetujui" ? "APPROVED" : "REJECTED",
+      dokumen._id
+    );
+
+    res.json({ msg: `Status dokumen berhasil diubah menjadi "${status}"`, dokumen });
+  } catch (err) {
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Dokumen tidak ditemukan' });
+    }
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+// ==================== ROLE-BASED FUNCTIONS ====================
+
+// Mapping role ke jenis dokumen yang boleh diakses
+const ROLE_DOCUMENT_ACCESS = {
+  "Super Admin": null, // null = akses semua dokumen
+  "HRD": ["Pribadi", "Surat Ijin"],
+  "Operasional Manajer": ["Laporan", "Proposal"],
+  "Karyawan": null // Karyawan hanya akses dokumen milik sendiri (handled by getMyDokumen)
+};
+
+/**
+ * @route   GET api/dokumen/manager/all
+ * @desc    Ambil dokumen berdasarkan role (HRD/Operasional Manajer/Super Admin)
+ * @access  Private (Manager roles)
+ */
+exports.getDokumenByRole = async (req, res) => {
+  try {
+    const userRole = req.user.role;
+    const allowedTypes = ROLE_DOCUMENT_ACCESS[userRole];
+
+    let filter = {};
+    if (allowedTypes) {
+      filter.jenisDokumen = { $in: allowedTypes };
+    }
+
+    const dokumen = await Dokumen.find(filter)
+      .populate('karyawanId', 'namaPengguna email')
+      .sort({ tanggalUnggah: -1 });
+
+    res.json(dokumen);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+};
+
+/**
+ * @route   PUT api/dokumen/manager/status/:id
+ * @desc    Update status dokumen berdasarkan role (HRD/Op. Manajer hanya bisa update dokumen sesuai jenisnya)
+ * @access  Private (Manager roles)
+ */
+exports.updateStatusByRole = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const userRole = req.user.role;
+
+    // Validasi status
+    const validStatuses = ['Disetujui', 'Ditolak', 'Menunggu Persetujuan'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ msg: 'Status tidak valid. Gunakan: Disetujui, Ditolak, atau Menunggu Persetujuan' });
+    }
+
+    // Ambil dokumen terlebih dahulu
+    const dokumen = await Dokumen.findById(req.params.id).populate('karyawanId', 'namaPengguna email');
+    
+    if (!dokumen) {
+      return res.status(404).json({ msg: 'Dokumen tidak ditemukan' });
+    }
+
+    // Cek apakah user memiliki akses ke jenis dokumen ini
+    const allowedTypes = ROLE_DOCUMENT_ACCESS[userRole];
+    
+    // Super Admin bisa update semua
+    if (userRole !== "Super Admin") {
+      if (allowedTypes && !allowedTypes.includes(dokumen.jenisDokumen)) {
+        return res.status(403).json({ 
+          msg: `Anda tidak memiliki akses untuk mengubah status dokumen jenis "${dokumen.jenisDokumen}"` 
+        });
+      }
+    }
+
+    // Update status
+    dokumen.status = status;
+    await dokumen.save();
+
+    // Notifikasi ke Pemilik Dokumen
+    await createNotification(
+      dokumen.karyawanId._id,
+      `Dokumen Anda "${dokumen.judul}" telah ${status} oleh ${userRole}.`,
       status === "Disetujui" ? "APPROVED" : "REJECTED",
       dokumen._id
     );

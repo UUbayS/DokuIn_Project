@@ -11,11 +11,12 @@ const KelolaKaryawan = () => {
     email: "",
     kataSandi: "",
     konfirmasiSandi: "",
+    role: "Karyawan",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
 
-  const { namaPengguna, email, kataSandi, konfirmasiSandi } = formData;
+  const { namaPengguna, email, kataSandi, konfirmasiSandi, role } = formData;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -46,11 +47,11 @@ const KelolaKaryawan = () => {
 
     try {
       // axios sudah punya default header x-auth-token dari AuthContext
-      await axios.post("/api/auth/register", { namaPengguna, email, kataSandi });
+      await axios.post("/api/auth/register", { namaPengguna, email, kataSandi, role });
 
       setMessage({
         type: "success",
-        text: `Karyawan "${namaPengguna}" berhasil didaftarkan!`,
+        text: `${role} "${namaPengguna}" berhasil didaftarkan!`,
       });
 
       // Reset form
@@ -59,6 +60,7 @@ const KelolaKaryawan = () => {
         email: "",
         kataSandi: "",
         konfirmasiSandi: "",
+        role: "Karyawan",
       });
     } catch (err) {
       console.error("Error registering:", err);
@@ -171,6 +173,22 @@ const KelolaKaryawan = () => {
               disabled={isLoading}
               style={inputStyle}
             />
+          </div>
+
+          <div style={{ marginBottom: "20px" }}>
+            <label style={labelStyle} htmlFor="role">Role</label>
+            <select
+              id="role"
+              name="role"
+              value={role}
+              onChange={handleChange}
+              disabled={isLoading}
+              style={inputStyle}
+            >
+              <option value="Karyawan">Karyawan</option>
+              <option value="HRD">HRD</option>
+              <option value="Operasional Manajer">Operasional Manajer</option>
+            </select>
           </div>
 
           <button 

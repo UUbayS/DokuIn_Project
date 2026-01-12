@@ -25,7 +25,7 @@ exports.getCommentsByDokumen = async (req, res) => {
 /**
  * @route   POST api/comments/:dokumenId
  * @desc    Tambah komentar baru ke dokumen
- * @access  Private (Admin bisa semua, Karyawan hanya dokumen sendiri)
+ * @access  Private (Manager roles bisa semua, Karyawan hanya dokumen sendiri)
  */
 exports.addComment = async (req, res) => {
   try {
@@ -42,8 +42,9 @@ exports.addComment = async (req, res) => {
       return res.status(404).json({ msg: "Dokumen tidak ditemukan" });
     }
 
-    // Cek otorisasi: Admin bisa comment di semua, Karyawan hanya di dokumennya sendiri
-    if (req.user.role !== "Administrator") {
+    // Cek otorisasi: Manager roles bisa comment di semua, Karyawan hanya di dokumennya sendiri
+    const managerRoles = ["Super Admin", "HRD", "Operasional Manajer"];
+    if (!managerRoles.includes(req.user.role)) {
       if (dokumen.karyawanId.toString() !== req.user.id) {
         return res.status(403).json({ msg: "Anda hanya bisa berkomentar di dokumen Anda sendiri" });
       }
@@ -59,11 +60,11 @@ exports.addComment = async (req, res) => {
 
     const comment = await newComment.save();
 
-    // [NEW] Notifikasi ke Pemilik Dokumen jika Admin yang komen
-    if (req.user.role === "Administrator") {
+    // [NEW] Notifikasi ke Pemilik Dokumen jika Manager roles yang komen
+    if (["Super Admin", "HRD", "Operasional Manajer"].includes(req.user.role)) {
       await createNotification(
         dokumen.karyawanId,
-        `Admin memberikan komentar pada dokumen "${dokumen.judul}".`,
+        `${req.user.role} memberikan komentar pada dokumen "${dokumen.judul}".`,
         "NEW_COMMENT",
         dokumenId
       );
@@ -96,8 +97,9 @@ exports.deleteComment = async (req, res) => {
       return res.status(404).json({ msg: "Komentar tidak ditemukan" });
     }
 
-    // Cek otorisasi: hanya pemilik atau admin yang bisa hapus
-    if (comment.userId.toString() !== req.user.id && req.user.role !== "Administrator") {
+    // Cek otorisasi: hanya pemilik atau manager roles yang bisa hapus
+    const managerRoles = ["Super Admin", "HRD", "Operasional Manajer"];
+    if (comment.userId.toString() !== req.user.id && !managerRoles.includes(req.user.role)) {
       return res.status(403).json({ msg: "Anda tidak berhak menghapus komentar ini" });
     }
 
