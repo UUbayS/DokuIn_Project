@@ -22,7 +22,6 @@ const AdminDashboard = () => {
   const fetchAllDokumen = async () => {
     setIsLoading(true);
     try {
-      // Gunakan endpoint manager yang bisa diakses oleh Super Admin, HRD, dan Op. Manajer
       const res = await axios.get("/api/dokumen/manager/all");
       setDokumenList(res.data);
       setError("");
@@ -44,19 +43,19 @@ const AdminDashboard = () => {
     if (!user || dokumenList.length === 0) return [];
 
     // Jika Super Admin, kembalikan semua
-    if (user.role === 'Administrator') {
+    if (user.role === 'Super Admin') {
       return dokumenList;
     }
 
     // Jika HRD: Hanya Pribadi & Surat (Surat Izin)
-    if (user.role === 'hrd') {
+    if (user.role === 'HRD') {
       return dokumenList.filter(doc => 
         ['Pribadi', 'Surat', 'Surat Izin'].includes(doc.jenisDokumen)
       );
     }
 
     // Jika Operational Manager: Hanya Proposal & Laporan
-    if (user.role === 'operational_manager') {
+    if (user.role === 'Operasional Manajer') {
       return dokumenList.filter(doc => 
         ['Proposal', 'Laporan'].includes(doc.jenisDokumen)
       );
@@ -124,7 +123,7 @@ const AdminDashboard = () => {
             <div className="list-message error">{error}</div>
           ) : pendingDocs.length === 0 ? (
             <div className="list-message empty">
-              🎉 Tidak ada dokumen yang menunggu persetujuan.
+              Tidak ada dokumen yang menunggu persetujuan.
             </div>
           ) : (
             <ul className="recent-docs-list">

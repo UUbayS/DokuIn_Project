@@ -353,6 +353,87 @@
   color: #e11d48;
 }
 
+/* == STYLING MODAL (Pop-up) == */
+.approve-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.approve-content {
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.approve-icon-confirm {
+  color: var(--dark-color); 
+  margin-bottom: 1rem;
+}
+
+.approve-icon-success {
+  color: var(--success-color); 
+  margin-bottom: 1rem;
+}
+
+.approve-icon-reject {
+  color: var(--danger-color); 
+  margin-bottom: 1rem;
+}
+
+.approve-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--dark-color);
+  margin: 0.5rem 0;
+}
+
+.approve-text {
+  font-size: 1rem;
+  color: #4b5563;
+  margin-bottom: 2rem;
+}
+
+.approve-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.approve-buttons-single {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.approve-buttons .btn,
+.approve-buttons-single .btn {
+  flex-grow: 1;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+.btn-primary:hover {
+  background-color: var(--primary-color-light);
+}
+
 /* States */
 
 .loading-message,

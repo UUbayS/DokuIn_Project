@@ -194,15 +194,17 @@ const KelolaKaryawan = () => {
             />
           </div>
 
-          <div style={{ marginBottom: "20px" }}>
-            <label style={labelStyle} htmlFor="role">Role</label>
+          <div className="form-group">
+            <label className="form-label" htmlFor="role">
+              Role
+            </label>
             <select
               id="role"
               name="role"
               value={role}
               onChange={handleChange}
               disabled={isLoading}
-              style={inputStyle}
+              className="form-input" 
             >
               <option value="Karyawan">Karyawan</option>
               <option value="HRD">HRD</option>
