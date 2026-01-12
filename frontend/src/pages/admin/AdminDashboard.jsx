@@ -9,8 +9,6 @@ import StatsCard from "../../components/statscard";
 
 import {
   HiDocumentText,
-  HiCheckCircle,
-  HiXCircle,
   HiClock,
   HiArrowRight,
 } from "react-icons/hi";
@@ -131,17 +129,17 @@ const AdminDashboard = () => {
             <ul className="recent-docs-list">
               {pendingDocs.map((doc) => (
                 <li key={doc._id} className="recent-doc-item">
-                  <div className="doc-info">
-                    <HiDocumentText size={24} className="doc-info-icon" />
-                    <div className="doc-info-text">
-                      <div className="doc-info-name">{doc.judul}</div>
-                      <div className="doc-info-meta">
+                  <div className="recent-doc-info">
+                    <HiDocumentText size={24} className="recent-doc-info-icon" />
+                    <div className="recent-doc-info-text">
+                      <div className="recent-doc-info-name">{doc.judul}</div>
+                      <div className="recent-doc-info-meta">
                         {doc.karyawanId?.namaPengguna || "Unknown"} • {new Date(doc.tanggalUnggah).toLocaleDateString("id-ID")}
                       </div>
                     </div>
                   </div>
-                  <span className="doc-status pending">
-                    <HiClock size={14} className="doc-status-icon" />
+                  <span className="recent-doc-status pending">
+                    <HiClock size={14} className="recent-doc-status-icon" />
                     Menunggu
                   </span>
                 </li>
