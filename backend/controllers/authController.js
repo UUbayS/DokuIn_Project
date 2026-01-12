@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 exports.registerUser = async (req, res) => {
-  const { namaPengguna, email, kataSandi } = req.body;
+  const { namaPengguna, email, kataSandi, role } = req.body;
 
   try {
     let userByEmail = await User.findOne({ email });
@@ -17,10 +17,15 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ msg: "Nama pengguna sudah digunakan" });
     }
 
+    // Validasi role - tidak boleh daftar sebagai Super Admin melalui form
+    const allowedRoles = ["Karyawan", "HRD", "Operasional Manajer"];
+    const userRole = allowedRoles.includes(role) ? role : "Karyawan";
+
     let user = new User({
       namaPengguna,
       email,
       kataSandi,
+      role: userRole,
     });
 
     const salt = await bcrypt.genSalt(10);
@@ -28,7 +33,7 @@ exports.registerUser = async (req, res) => {
 
     await user.save();
 
-    res.status(201).json({ msg: "Registrasi berhasil. Akun Anda sedang menunggu verifikasi Admin." });
+    res.status(201).json({ msg: `${userRole} berhasil didaftarkan!` });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -62,7 +67,7 @@ exports.loginUser = async (req, res) => {
     const payload = {
       user: {
         id: user.id,
-        role: user.role, // Menyimpan role (Karyawan/Administrator) di token
+        role: user.role, // Role: Karyawan, Super Admin, HRD, Operasional Manajer
       },
     };
 

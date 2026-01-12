@@ -1,5 +1,5 @@
 // backend/middleware/adminMiddleware.js
-// Middleware untuk memastikan hanya Administrator yang bisa mengakses
+// Middleware untuk memastikan hanya Super Admin yang bisa mengakses
 
 module.exports = function (req, res, next) {
   // req.user sudah di-set oleh authMiddleware sebelumnya
@@ -8,8 +8,8 @@ module.exports = function (req, res, next) {
   }
 
   // Cek role
-  if (req.user.role !== "Administrator") {
-    return res.status(403).json({ msg: "Akses ditolak. Hanya Administrator yang diizinkan." });
+  if (req.user.role !== "Super Admin") {
+    return res.status(403).json({ msg: "Akses ditolak. Hanya Super Admin yang diizinkan." });
   }
 
   next();

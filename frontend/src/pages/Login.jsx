@@ -43,7 +43,8 @@ const Login = () => {
       
       // Check role from localStorage (already saved by login function)
       const userData = JSON.parse(localStorage.getItem("user"));
-      if (userData && userData.role === "Administrator") {
+      const managerRoles = ["Super Admin", "HRD", "Operasional Manajer"];
+      if (userData && managerRoles.includes(userData.role)) {
         navigate("/admin");
       } else {
         navigate("/");

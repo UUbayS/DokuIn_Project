@@ -22,7 +22,8 @@ const AdminDashboard = () => {
   const fetchAllDokumen = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get("/api/dokumen/admin/all");
+      // Gunakan endpoint manager yang bisa diakses oleh Super Admin, HRD, dan Op. Manajer
+      const res = await axios.get("/api/dokumen/manager/all");
       setDokumenList(res.data);
       setError("");
     } catch (err) {

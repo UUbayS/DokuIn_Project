@@ -21,8 +21,8 @@ const UserSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      // Dokumen SKPL/DPPL menyebutkan 2 aktor utama: Karyawan dan Administrator
-      enum: ["Karyawan", "Administrator"],
+      // Role: Karyawan (default), Super Admin, HRD, Operasional Manajer
+      enum: ["Karyawan", "Super Admin", "HRD", "Operasional Manajer"],
       default: "Karyawan",
     },
     // Atribut tambahan dari diagram kelas [cite: 726, 1044-1046]

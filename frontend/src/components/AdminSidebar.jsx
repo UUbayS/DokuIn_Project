@@ -1,5 +1,5 @@
 // frontend/src/components/AdminSidebar.jsx
-// Sidebar khusus untuk halaman Administrator
+// Sidebar khusus untuk halaman Administrator/Manager
 
 import { 
   HiChartPie, 
@@ -32,9 +32,7 @@ const AdminSidebar = () => {
         <div className="sidebar-profile-name">
           {user ? user.namaPengguna : "Admin"}
         </div>
-        <div className="sidebar-profile-role">
-          {user ? formatRole(user.role) : "Guest"}
-        </div>
+        <div className="sidebar-profile-role">{user?.role || "Admin"}</div>
       </div>
       
       <nav className="sidebar-nav">
@@ -51,7 +49,8 @@ const AdminSidebar = () => {
               <span>Kelola Dokumen</span>
             </NavLink>
           </li>
-          {isSuperAdmin && (
+          {/* Hanya Super Admin yang bisa kelola karyawan */}
+          {user?.role === "Super Admin" && (
             <li>
               <NavLink to="/admin/kelola-karyawan" className="sidebar-nav-item">
                 <HiUserAdd size={20} />
@@ -66,3 +65,4 @@ const AdminSidebar = () => {
 };
 
 export default AdminSidebar;
+
