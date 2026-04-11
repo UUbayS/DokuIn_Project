@@ -2,7 +2,6 @@
 
 ![Node.js](https://img.shields.io/badge/Node.js-18%2B-green)
 ![JavaScript](https://img.shields.io/badge/Language-JavaScript-yellow)
-![Status](https://1img.shields.io/badge/Status-Development-orange)
 
 ---
 
