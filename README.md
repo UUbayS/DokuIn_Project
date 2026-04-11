@@ -1,129 +1,244 @@
 # DokuIn Project
 
-DokuIn Project is a full-stack web application organized into separate **backend** and **frontend** apps.
+![Node.js](https://img.shields.io/badge/Node.js-18%2B-green)
+![JavaScript](https://img.shields.io/badge/Language-JavaScript-yellow)
+![Status](https://img.shields.io/badge/Status-Development-orange)
 
-## Project Structure
+DokuIn Project adalah aplikasi berbasis **frontend** dan **backend** yang dibuat untuk pengembangan sistem web modular dan mudah dikembangkan.
 
-```text
-DokuIn_Project/
-├── backend/
-│   ├── config/
-│   ├── controllers/
-│   ├── middleware/
-│   ├── models/
-│   ├── routes/
-│   ├── uploads/
-│   ├── migrateData.js
-│   ├── server.js
-│   ├── package.json
-│   └── .env
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   ├── index.html
-│   ├── vite.config.js
-│   ├── eslint.config.js
-│   ├── package.json
-│   └── README.md
-└── package.json
-```
+---
+### Halaman Login
+![Logo](/logo.png)
 
-## Tech Stack
+### Tampilan Dashboard
+<img src="/logo.png" alt="logo" width="900"/>
 
-- **Frontend:** React + Vite
-- **Backend:** Node.js + Express (based on backend structure and server layout)
-- **Other:** ESLint configuration in frontend, environment-based backend config
+---
 
-## Prerequisites
-
-Make sure you have installed:
-
-- [Node.js](https://nodejs.org/) (LTS recommended)
-- npm (comes with Node.js)
-
-## Installation
-
-From the repository root:
+## 📁 Struktur Project
 
 ```bash
-# Install root dependencies (if used)
-npm install
-
-# Install backend dependencies
-cd backend
-npm install
-
-# Install frontend dependencies
-cd ../frontend
-npm install
+DokuIn_Project/
+├── frontend/              # Aplikasi client (UI)
+│   ├── src/
+│   ├── public/
+│   └── package.json
+│
+├── backend/               # API / server
+│   ├── src/
+│   ├── .env.example
+│   └── package.json
+│
+├── .gitignore
+└── README.md
 ```
 
-## Environment Variables
+---
 
-A `.env` file exists in `backend/`.  
-Create or update `backend/.env` with your local values (example):
+## ✨ Fitur Utama
+
+- Struktur project terpisah antara frontend dan backend
+- Konfigurasi environment yang aman (`.env` tidak di-commit)
+- Siap untuk pengembangan lanjutan dan deployment
+
+---
+
+## 🧰 Tech Stack
+
+- **JavaScript**
+- **CSS**
+- **HTML**
+- **Node.js + npm**
+- **GitHub**
+
+---
+
+## ✅ Prasyarat
+
+Pastikan perangkatmu sudah terpasang:
+
+- Node.js (disarankan v18+)
+- npm
+- Git
+
+Cek versi:
+
+```bash
+node -v
+npm -v
+git --version
+```
+
+---
+
+## ⚙️ Instalasi
+
+Clone project:
+
+```bash
+git clone https://github.com/UUbayS/DokuIn_Project.git
+cd DokuIn_Project
+```
+
+Install dependency frontend & backend:
+
+```bash
+cd frontend
+npm install
+cd ../backend
+npm install
+cd ..
+```
+
+---
+
+## 🔐 Konfigurasi Environment
+
+Masuk folder backend lalu copy `.env.example` jadi `.env`:
+
+```bash
+cd backend
+cp .env.example .env
+```
+
+Untuk Windows CMD:
+
+```bat
+copy .env.example .env
+```
+
+Isi variabel sesuai kebutuhan lokal kamu.
+
+Contoh:
 
 ```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
+NODE_ENV=development
+APP_PORT=3000
+APP_URL=http://localhost:3000
+
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_NAME=your_db_name
+DB_USER=your_db_user
+DB_PASSWORD=your_db_password
+
+JWT_SECRET=replace_with_strong_secret
 ```
 
-> Adjust variable names to match what your backend actually expects.
+---
 
-## Run the Project
+## ▶️ Menjalankan Project
 
-Use two terminals:
-
-### 1) Start Backend
-
+### 1. Jalankan Backend
 ```bash
 cd backend
-npm start
+npm run dev
 ```
 
-(If your backend uses a dev script, you can use `npm run dev` instead.)
-
-### 2) Start Frontend
-
+### 2. Jalankan Frontend (terminal baru)
 ```bash
 cd frontend
 npm run dev
 ```
 
-Frontend typically runs on Vite default (`http://localhost:5173`) unless changed.
+---
 
-## Data Migration
+## 📜 Scripts
 
-A migration script is present:
-
+### Frontend
 ```bash
-cd backend
-node migrateData.js
+npm run dev
+npm run build
+npm run preview
 ```
 
-Use this only when you need to seed/migrate data.
-
-## Linting (Frontend)
-
+### Backend
 ```bash
-cd frontend
-npm run lint
+npm run dev
+npm run start
 ```
 
-## Notes
+---
 
-- The repository currently includes `node_modules` directories, which are usually excluded from version control.
-- Consider adding a root `.gitignore` to prevent committing dependencies and environment files.
+## 🌐 API Endpoint (Contoh)
 
-## Contributing
+> Sesuaikan dengan backend kamu
 
-1. Fork the repo
-2. Create a feature branch
-3. Commit your changes
-4. Push your branch
-5. Open a Pull Request
+- `GET /api/health` → cek status server
+- `POST /api/auth/login` → login
+- `GET /api/users` → ambil data user
 
-## License
+---
 
-Add your license information here (e.g., MIT).
+## 🛡️ Security Notes
+
+Pastikan `.gitignore` punya ini:
+
+```gitignore
+# dependencies
+node_modules/
+**/node_modules/
+
+# env files
+.env
+.env.*
+!.env.example
+```
+
+Checklist:
+- Jangan commit file `.env`
+- Jangan taruh secret di frontend
+- Jika secret pernah kepush, segera rotate
+
+---
+
+## 🧪 Troubleshooting
+
+### `npm install` gagal
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
+
+Windows CMD:
+```bat
+rmdir /s /q node_modules
+del package-lock.json
+npm install
+```
+
+### Port bentrok (`EADDRINUSE`)
+- Ganti port di `.env`
+- Atau matikan proses yang pakai port
+
+### Frontend tidak konek backend
+- Cek `API_BASE_URL`
+- Cek CORS backend
+- Pastikan backend aktif
+
+---
+
+## 🤝 Kontribusi
+
+1. Fork repo
+2. Buat branch fitur:
+   ```bash
+   git checkout -b feat/nama-fitur
+   ```
+3. Commit:
+   ```bash
+   git commit -m "feat: tambah fitur"
+   ```
+4. Push:
+   ```bash
+   git push origin feat/nama-fitur
+   ```
+5. Buat Pull Request
+
+---
+
+## 👤 Author
+
+**UUbayS**  
+GitHub: [@UUbayS](https://github.com/UUbayS)
+
