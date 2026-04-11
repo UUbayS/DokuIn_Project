@@ -9,9 +9,9 @@
 
 ---
 
-DokuIn Project adalah aplikasi berbasis **frontend** dan **backend** yang dibuat untuk pengembangan sistem web modular dan mudah dikembangkan.
+DokuIn Project is a frontend and backend based application built for the development of modular and easily scalable web systems.
 
-## 📁 Struktur Project
+## 📁 Project Structure
 
 ```bash
 DokuIn_Project/
@@ -40,7 +40,7 @@ DokuIn_Project/
 
 ---
 
-## ✅ Prasyarat
+## ✅ Prerequisites
 
 - Node.js v18+
 - npm
@@ -48,7 +48,7 @@ DokuIn_Project/
 
 ---
 
-## ⚙️ Instalasi
+## ⚙️ Installation
 
 ```bash
 git clone https://github.com/UUbayS/DokuIn_Project.git
@@ -58,14 +58,14 @@ npm run install:all
 
 ---
 
-## ▶️ Menjalankan Project
+## ▶️ Running the Project
 
-### Jalankan frontend + backend bersamaan
+### Run frontend + backend together
 ```bash
 npm start
 ```
 
-### Jalankan terpisah (opsional)
+### Run separately (optional)
 
 Backend:
 ```bash
@@ -81,7 +81,7 @@ npm run frontend
 
 ## 🔐 Environment Setup
 
-Di folder `backend`, buat `.env` dari `.env.example`:
+In the `backend` folder, create `.env` from `.env.example`:
 
 ```bash
 cd backend
@@ -93,13 +93,13 @@ Windows CMD:
 copy .env.example .env
 ```
 
-Isi variabel rahasia sesuai kebutuhan lokal.
+Fill in the secret variables according to local needs.
 
 ---
 
-## 🤝 Kontribusi
+## 🤝 Contribution
 
-1. Buat branch:
+1. Create branch:
    ```bash
    git checkout -b feat/nama-fitur
    ```
@@ -111,6 +111,6 @@ Isi variabel rahasia sesuai kebutuhan lokal.
    ```bash
    git push origin feat/nama-fitur
    ```
-4. Buka Pull Request
+4. Open Pull Request
 
 ---
