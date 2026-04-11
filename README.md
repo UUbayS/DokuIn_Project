@@ -2,18 +2,15 @@
 
 ![Node.js](https://img.shields.io/badge/Node.js-18%2B-green)
 ![JavaScript](https://img.shields.io/badge/Language-JavaScript-yellow)
-![Status](https://img.shields.io/badge/Status-Development-orange)
-
-DokuIn Project adalah aplikasi berbasis **frontend** dan **backend** yang dibuat untuk pengembangan sistem web modular dan mudah dikembangkan.
+![Status](https://1img.shields.io/badge/Status-Development-orange)
 
 ---
-### Halaman Login
+
 ![Logo](/logo.png)
 
-### Tampilan Dashboard
-<img src="/logo.png" alt="logo" width="900"/>
-
 ---
+
+DokuIn Project adalah aplikasi berbasis **frontend** dan **backend** yang dibuat untuk pengembangan sistem web modular dan mudah dikembangkan.
 
 ## 📁 Struktur Project
 
